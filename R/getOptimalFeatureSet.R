@@ -16,7 +16,7 @@ getOptimalFeatureSet <- function(log.data, ordered.genes) {
         # Run PCA on the feature data
         log.feature.data <-
             log.data[ordered.genes[1:num_genes],]
-        pca.data <- irlba::prcomp_irlba(x = t(log.feature.data), n = min(nrow(log.feature.data) - 1, 15), center = TRUE, scale. = FALSE)$x
+        pca.data <- irlba::prcomp_irlba(x = Matrix::t(log.feature.data), n = min(nrow(log.feature.data) - 1, 15), center = TRUE, scale. = FALSE)$x
         rownames(pca.data) <- colnames(log.feature.data)
 
         # Compute k-NN distance
