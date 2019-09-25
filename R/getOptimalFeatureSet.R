@@ -11,7 +11,7 @@ getOptimalFeatureSet <- function(log.data, ordered.genes) {
     k = 7
 
     # For each neighbour
-    for(num_genes in seq(from = 125, to = length(ordered.genes), by = 25)) {
+    for(num_genes in seq(from = 100, to = length(ordered.genes), by = 100)) {
 
         # Run PCA on the feature data
         log.feature.data <-
