@@ -2,6 +2,9 @@
 #' @param correlation_matrix gene-gene correlation matrix
 #' @param log.data log-transformed gene-expression matrix
 #' @return list of genes with their z-transformed correlation range values
+#'
+#' @export
+#'
 getGGC <- function(log.data, is_noisy = FALSE) {
 
     # Bin genes by mean expression

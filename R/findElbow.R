@@ -42,6 +42,7 @@
 #' on typical data that you encounter to verify that it works
 #' in your cases.
 #'
+#' @export
 #'
 
 findElbow <- function(y, ylab = "y values", plot = FALSE, returnIndex = TRUE) {

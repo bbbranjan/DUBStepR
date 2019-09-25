@@ -2,6 +2,9 @@
 #' @param data gene expression matrix
 #' @param min.cells gene expression matrix
 #' @return filtered gene-expression matrix
+#'
+#' @export
+#'
 getfilteredData <- function(data, min.cells = 0.05*ncol(data)) {
 
     # Filter data by gene expression

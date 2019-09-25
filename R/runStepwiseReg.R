@@ -1,6 +1,9 @@
 #' @title Run step-wise regression to order the features
 #' @param ggc gene-gene correlation matrix
 #' @return list of ordered genes
+#'
+#' @export
+#'
 runStepwiseReg <- function(ggc) {
 
     # Initialize variables

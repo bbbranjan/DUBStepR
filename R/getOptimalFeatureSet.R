@@ -2,6 +2,9 @@
 #' @param log.data log-transformed gene-expression matrix
 #' @param ordered.genes genes ordered after stepwise regression
 #' @return optimal feature set
+#'
+#' @export
+#'
 getOptimalFeatureSet <- function(log.data, ordered.genes) {
 
     # Initialise variables
@@ -20,7 +23,7 @@ getOptimalFeatureSet <- function(log.data, ordered.genes) {
         rownames(pca.data) <- colnames(log.feature.data)
 
         # Compute k-NN distance
-        my.knn <-
+        RANN::my.knn <-
             nn2(
                 data = pca.data,
                 k = k,
