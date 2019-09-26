@@ -23,8 +23,8 @@ getOptimalFeatureSet <- function(log.data, ordered.genes) {
         rownames(pca.data) <- colnames(log.feature.data)
 
         # Compute k-NN distance
-        RANN::my.knn <-
-            nn2(
+        my.knn <-
+            RANN::nn2(
                 data = pca.data,
                 k = k,
                 searchtype = "priority",
