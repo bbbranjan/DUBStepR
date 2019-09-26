@@ -2,7 +2,7 @@
 #' @title DUBStepR - Obtain a list of feature genes to characterise cell types
 #' @param log.data normalised log-transformed genes x cells single-cell RNA-seq data
 #' @param is_noisy TRUE if data is noisy, FALSE otherwise.
-#' @return
+#' @return Returns a list of all feature genes and the optimal feature set
 #'
 #' @export
 #'
@@ -23,5 +23,5 @@ DUBStepR <- function(log.data, is_noisy = FALSE) {
 
 
     # Return filtered data
-    return(log.data[feature.genes, ])
+    return(list("all_feature_genes" = ordered.genes, "optimal_feature_genes" = feature.genes))
 }

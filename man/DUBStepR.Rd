@@ -12,7 +12,7 @@ DUBStepR(log.data, is_noisy = FALSE)
 \item{is_noisy}{TRUE if data is noisy, FALSE otherwise.}
 }
 \value{
-
+Returns a list of all feature genes and the optimal feature set
 }
 \description{
 DUBStepR - Obtain a list of feature genes to characterise cell types
