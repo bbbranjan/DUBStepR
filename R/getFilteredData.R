@@ -9,7 +9,7 @@ getfilteredData <- function(data, min.cells = 0.05*ncol(data)) {
 
     # Filter data by gene expression
     filt.data <- data[apply(data, 1, function(x){
-        sum(x>0) > 0.05*ncol(data)
+        sum(x>0) > min.cells
     }), ]
 
 
