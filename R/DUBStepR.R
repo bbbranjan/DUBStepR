@@ -10,18 +10,21 @@
 DUBStepR <- function(log.data, is_noisy = FALSE) {
 
     # Filter genes
-    filt.data <- getfilteredData(data = log.data)
+    log.filt.data <- getfilteredData(data = log.data)
+
+    # Smooth data
+    smooth.log.filt.data <- kNNSmoothing(log.filt.data = log.filt.data)
 
     # Compute gene-gene correlation matrix
-    ggc <- getGGC(log.data = filt.data, is_noisy = is_noisy)
+    ggc <- getGGC(log.data = smooth.log.filt.data, is_noisy = is_noisy)
 
     # Order genes using stepwise regression
     ordered.genes <- runStepwiseReg(ggc = ggc)
 
     # Use Compactness Index (CI) to obtain optimal feature set
-    feature.genes <- getOptimalFeatureSet(log.data = log.data, ordered.genes = ordered.genes)
+    feature.genes <- getOptimalFeatureSet(log.data = log.filt.data, ordered.genes = ordered.genes)
 
 
     # Return filtered data
-    return(list("all_feature_genes" = ordered.genes, "optimal_feature_genes" = feature.genes))
+    return(log.data[feature.genes, ])
 }
