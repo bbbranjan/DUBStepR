@@ -26,5 +26,5 @@ DUBStepR <- function(log.data, is_noisy = FALSE) {
 
 
     # Return filtered data
-    return(log.data[feature.genes, ])
+    return(list("optimal.feature.genes" = feature.genes, "all.feature.genes" = ordered.genes))
 }
