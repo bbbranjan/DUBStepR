@@ -4,12 +4,12 @@
 \alias{DUBStepR}
 \title{DUBStepR - Obtain a list of feature genes to characterise cell types}
 \usage{
-DUBStepR(log.data, is_noisy = FALSE)
+DUBStepR(log.data, min.cells = 10)
 }
 \arguments{
 \item{log.data}{normalised log-transformed genes x cells single-cell RNA-seq data}
 
-\item{is_noisy}{TRUE if data is noisy, FALSE otherwise.}
+\item{min.cells}{minimum number of cells to filter genes out and smooth data over}
 }
 \value{
 Returns a list of all feature genes and the optimal feature set

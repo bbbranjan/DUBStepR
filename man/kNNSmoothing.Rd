@@ -4,10 +4,12 @@
 \alias{kNNSmoothing}
 \title{k-NN Smoothing of gene expression data}
 \usage{
-kNNSmoothing(log.filt.data)
+kNNSmoothing(log.filt.data, k = 11)
 }
 \arguments{
 \item{log.filt.data}{filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix}
+
+\item{k}{number of nearest neighbours the data is smoothed over}
 }
 \value{
 k-NN Smoothed data matrix
