@@ -22,7 +22,7 @@ runStepwiseReg <- function(ggc) {
         print(paste("Num genes:", i))
 
         # Compute GGC'*GGC
-        ggc_ggc <- mat.mult(t(ggc_centered), ggc_centered)
+        ggc_ggc <- Rfast::mat.mult(t(ggc_centered), ggc_centered)
         dimnames(ggc_ggc) <- dimnames(ggc_centered)
 
         # Compute variance explained

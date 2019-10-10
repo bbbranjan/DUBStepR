@@ -4,7 +4,7 @@
 \alias{getCorrelationRange}
 \title{Compute the correlation range values for all genes in the gene-gene correlation matrix}
 \usage{
-getCorrelationRange(log.data)
+getCorrelationRange(correlation_matrix)
 }
 \arguments{
 \item{correlation_matrix}{gene-gene correlation matrix}

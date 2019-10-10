@@ -39,7 +39,7 @@ getOptimalFeatureSet <- function(log.data, ordered.genes) {
         # Calculate length scale to normalise distances
         sdVec <- apply(X = pca.data,
                        MARGIN = 2,
-                       FUN = sd)
+                       FUN = stats::sd)
         length_scale <- sqrt(sum(sdVec ^ 2))
 
         # Scale k-NN distances by length scale

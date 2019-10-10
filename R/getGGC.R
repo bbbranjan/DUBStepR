@@ -1,11 +1,10 @@
 #' @title Compute the correlation range values for all genes in the gene-gene correlation matrix
-#' @param correlation_matrix gene-gene correlation matrix
 #' @param log.data log-transformed gene-expression matrix
 #' @return list of genes with their z-transformed correlation range values
 #'
 #' @export
 #'
-getGGC <- function(log.data, is_noisy = FALSE) {
+getGGC <- function(log.data) {
 
     # Bin genes by mean expression
     num.bins = 20
@@ -14,40 +13,37 @@ getGGC <- function(log.data, is_noisy = FALSE) {
     gene.bins <- cut(x = gene.mean, breaks = num.bins)
     names(gene.bins) <- names(gene.mean)
 
-    rangeObj <- getCorrelationRange(log.data = log.data)
+    # Run fastCor for quicker correlation matrix computation
+    system.time({
+        correlation_matrix <- HiClimR::fastCor(xt = t(as.matrix(log.data)), nSplit = 10, upperTri = T, optBLAS = T)
+    })
+    correlation_matrix[which(is.na(correlation_matrix))] <- 0
+    correlation_matrix <- correlation_matrix + t(correlation_matrix)
+    diag(correlation_matrix) <- 1
+
+    # Obtain correlation range
+    rangeObj <- getCorrelationRange(correlation_matrix = correlation_matrix)
 
     logRange <- log(1+rangeObj$range)
 
     # Z-transform correlation range
     zRangeList <- tapply(X = logRange, INDEX = gene.bins, FUN = function(x){
-        (x - mean(x))/sd(x)
+        (x - mean(x))/stats::sd(x)
     })
 
+    # Set NAs to 0
     zRangeList <- lapply(zRangeList, function(x){
         x[is.na(x)] <- 0
         return(x)
     })
-
     zRange <- unlist(zRangeList)
     names(zRange) <- unlist(lapply(strsplit(x = names(zRange), split = "\\]\\."), "[[", 2))
 
-    geneset <- names(which(zRange > 0.7))
-
-    topGenes <- geneset
-
-    if(is_noisy) {
-        seurat_obj <- CreateSeuratObject(counts = filt.data)
-        seurat_obj <- NormalizeData(object = seurat_obj)
-        seurat_obj <- FindVariableFeatures(object = seurat_obj, selection.method = "dispersion")
-        hvg.info = seurat_obj@assays$RNA@meta.features
-        hvg.info <- hvg.info[order(hvg.info$mvp.dispersion.scaled, decreasing = T), ]
-
-        topHVGenes <- rownames(subset(hvg.info, mvp.dispersion.scaled > 1))
-        topGenes <- union(topGenes, topHVGenes)
-    }
+    # Obtain geneset with zRange > 0.7
+    topGenes <- names(which(zRange > 0.7))
 
     # Reduce the GGC to use only these genes
-    ggc <- fastCor(xt = t(as.matrix(log.data[topGenes, ])), nSplit = 5, upperTri = F, optBLAS = T)
+    ggc <- correlation_matrix[topGenes, topGenes]
 
     # Return as matrix
     return(as.matrix(ggc))
@@ -56,16 +52,7 @@ getGGC <- function(log.data, is_noisy = FALSE) {
 #' @title Compute the correlation range values for all genes in the gene-gene correlation matrix
 #' @param correlation_matrix gene-gene correlation matrix
 #' @return list of p-values, adjusted p-values and correlation ranges for each gene
-getCorrelationRange <- function(log.data) {
-
-    # Run fastCor for quicker correlations
-    system.time({
-        correlation_matrix <- fastCor(xt = t(as.matrix(log.data)), nSplit = 10, upperTri = T, optBLAS = T)
-    })
-    correlation_matrix[which(is.na(correlation_matrix))] <- 0
-    correlation_matrix <- correlation_matrix + t(correlation_matrix)
-    diag(correlation_matrix) <- 1
-
+getCorrelationRange <- function(correlation_matrix) {
 
     # Select the second largest correlation for each gene
     max_corr = apply(correlation_matrix, 2, Rfast::nth, 3, descending = T)

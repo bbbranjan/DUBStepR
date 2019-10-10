@@ -9,6 +9,8 @@ findElbow(y, ylab = "y values", plot = FALSE, returnIndex = TRUE)
 \arguments{
 \item{y}{Numeric vector of y values for the curve.}
 
+\item{ylab}{Y-axis label.}
+
 \item{plot}{Logical. Should a plot be made?}
 
 \item{returnIndex}{Logical. Should the return value

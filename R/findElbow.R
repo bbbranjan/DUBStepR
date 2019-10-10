@@ -8,7 +8,7 @@
 #' orthogonal distance from that line.
 #'
 #' @param y Numeric vector of y values for the curve.
-#'
+#'@param ylab Y-axis label.
 #' @param plot Logical. Should a plot be made?
 #'
 #' @param returnIndex Logical. Should the return value
