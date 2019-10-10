@@ -12,7 +12,7 @@ kNNSmoothing(log.filt.data, k = 11)
 \item{k}{number of nearest neighbours the data is smoothed over}
 }
 \value{
-k-NN Smoothed data matrix
+k-NN smoothed data matrix
 }
 \description{
 k-NN Smoothing of gene expression data
