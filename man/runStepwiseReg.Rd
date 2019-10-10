@@ -4,10 +4,12 @@
 \alias{runStepwiseReg}
 \title{Run step-wise regression to order the features}
 \usage{
-runStepwiseReg(ggc)
+runStepwiseReg(ggc, smooth.log.filt.data)
 }
 \arguments{
 \item{ggc}{gene-gene correlation matrix}
+
+\item{smooth.log.filt.data}{smoothed, filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix}
 }
 \value{
 list of ordered genes

@@ -4,7 +4,7 @@
 \alias{DUBStepR}
 \title{DUBStepR - Obtain a list of feature genes to characterise cell types}
 \usage{
-DUBStepR(log.data, min.cells = 10)
+DUBStepR(log.data, min.cells = 0.01 * ncol(log.data))
 }
 \arguments{
 \item{log.data}{normalised log-transformed genes x cells single-cell RNA-seq data}

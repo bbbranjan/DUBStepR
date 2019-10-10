@@ -23,7 +23,7 @@ kNNSmoothing <- function(log.filt.data, k = 11) {
         RANN::nn2(
             data = pca.data,
             k = k,
-            searchtype = "priority",
+            searchtype = "standard",
             eps = 0
         )
 

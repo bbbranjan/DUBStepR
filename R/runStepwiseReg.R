@@ -1,10 +1,11 @@
 #' @title Run step-wise regression to order the features
 #' @param ggc gene-gene correlation matrix
+#' @param smooth.log.filt.data smoothed, filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix
 #' @return list of ordered genes
 #'
 #' @export
 #'
-runStepwiseReg <- function(ggc) {
+runStepwiseReg <- function(ggc, smooth.log.filt.data) {
 
     # Initialize variables
     ggc_centered <- scale(x = ggc, center = TRUE, scale = FALSE)
@@ -37,19 +38,20 @@ runStepwiseReg <- function(ggc) {
             sqrt(ggc_ggc[idx,idx])
         })
 
+        # Select gene to regress out
         varExpVec <- gcNormVec/gNormVec
-
         regressed.genes <- names(sort(varExpVec, decreasing = T))[1:step]
-        # print(regressed.genes)
+
+        # Add regressed gene to feature set
         feature_genes <- union(feature_genes, regressed.genes)
 
         # Obtain the variance explained by the regressed genes
         regressed.g <- ggc_centered[, regressed.genes]
         gtg <- as.numeric(t(regressed.g) %*% regressed.g)
-
         explained <- (regressed.g %*% t(ggc_ggc[regressed.genes,]))/gtg
         eps <- ggc_centered - explained
 
+        # Append variance explained value to vector for scree plot
         scree_values[paste0(i)] <- sum(varExpVec[regressed.genes])
 
         # Update the GGC to be the residual after regressing out these genes
@@ -88,10 +90,11 @@ runStepwiseReg <- function(ggc) {
             x[which.max(x)]
         })
 
-    # Average 6-NN distance as a stopping criterion
-    k = 7
+    # Use Compactness Index (CI) as stopping criterion
+    k = 11
     mean_knn_vec <- c()
-
+    numStepsUnchangedMin = 0
+    minNumGenes = ""
 
     # Adding neighbours of each gene
     for (i in 1:(nrow(ggc) - length(neighbour_feature_genes))) {
@@ -123,8 +126,72 @@ runStepwiseReg <- function(ggc) {
             lapply(ggc_list[neighbour_feature_genes], function(x) {
                 x[which.max(x)]
             })
+
+        # For every 50 genes added
+        if((i%%50 == 0 | length(neighbour_feature_genes) == nrow(ggc)) & numStepsUnchangedMin <= 5) {
+
+            # Initialise number of genes
+            num_genes = length(neighbour_feature_genes)
+
+            # Run PCA on the feature data
+            log.feature.data <-
+                smooth.log.filt.data[neighbour_feature_genes,]
+            pca.data <- irlba::prcomp_irlba(x = Matrix::t(log.feature.data), n = 15, center = TRUE, scale. = FALSE)$x
+            rownames(pca.data) <- colnames(log.feature.data)
+
+            # Compute k-NN distance
+            # system.time(
+            #     my.knn <- RANN::nn2(
+            #         data = pca.data,
+            #         k = 11,
+            #         treetype = "kd",
+            #         searchtype = "standard",
+            #         eps = 0
+            #     )
+            # )
+
+            system.time(
+                nn.dists <- FNN::knn.dist(
+                    data = pca.data,
+                    k = 11,
+                    algorithm = "CR"
+                )
+            )
+            # nn.dists <- my.knn$nn.dists
+            rownames(nn.dists) <- rownames(pca.data)
+
+            # Remove first column as it consists of zeroes
+            # nn.dists <- nn.dists[, -1]
+
+            # Calculate length scale to normalise distances
+            sdVec <- apply(X = pca.data,
+                           MARGIN = 2,
+                           FUN = stats::sd)
+            length_scale <- sqrt(sum(sdVec ^ 2))
+
+            # Scale k-NN distances by length scale
+            mean_nn_dist <- mean(x = nn.dists)
+            scaled_mean_nn_dist <- mean_nn_dist / length_scale
+            names(scaled_mean_nn_dist) <- num_genes
+
+            mean_knn_vec <- append(mean_knn_vec, scaled_mean_nn_dist)
+
+            # Check if the minima has been updated
+            if(which.min(mean_knn_vec) != minNumGenes) {
+                minNumGenes = which.min(mean_knn_vec)
+                numStepsUnchangedMin = 0
+            } else {
+                numStepsUnchangedMin = numStepsUnchangedMin + 1
+            }
+
+            print(minNumGenes)
+
+        }
     }
 
+    # Determine optimal feature set
+    optimal_feature_genes <- neighbour_feature_genes[1:as.numeric(names(minNumGenes))]
+
     # Return ordered genes
-    return(neighbour_feature_genes)
+    return(list("feature_genes" = neighbour_feature_genes, "optimal_feature_genes" = optimal_feature_genes))
 }
