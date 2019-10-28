@@ -4,15 +4,20 @@
 \alias{DUBStepR}
 \title{DUBStepR - Obtain a list of feature genes to characterise cell types}
 \usage{
-DUBStepR(log.data, min.cells = 0.01 * ncol(log.data))
+DUBStepR(raw.data, log.normalize = T, min.cells = 0.05 *
+  ncol(raw.data), k = 10)
 }
 \arguments{
-\item{log.data}{normalised log-transformed genes x cells single-cell RNA-seq data}
+\item{raw.data}{raw gene expression matrix (genes x cells)}
+
+\item{log.normalize}{boolean indicating whether input matrix needs to be log-normalized. Default is TRUE.}
 
 \item{min.cells}{minimum number of cells to filter genes out and smooth data over}
+
+\item{k}{number of nearest neighbours}
 }
 \value{
-Returns a list of all feature genes and the optimal feature set
+Returns optimal feature set
 }
 \description{
 DUBStepR - Obtain a list of feature genes to characterise cell types

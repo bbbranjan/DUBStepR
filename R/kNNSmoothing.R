@@ -6,7 +6,7 @@
 #' @export
 #'
 
-kNNSmoothing <- function(log.filt.data, k = 11) {
+kNNSmoothing <- function(log.filt.data, k = 10) {
 
     # Reduce expression data to PC space for k-NN computation
     pca.data <-
@@ -22,7 +22,7 @@ kNNSmoothing <- function(log.filt.data, k = 11) {
     my.knn <-
         RANN::nn2(
             data = pca.data,
-            k = k,
+            k = (k+1),
             searchtype = "standard",
             eps = 0
         )
@@ -48,7 +48,7 @@ kNNSmoothing <- function(log.filt.data, k = 11) {
     adj.mat <- igraph::get.adjacency(graph = igraph::graph.edgelist(as.matrix(nn.melt), directed = TRUE))
 
     # Compute smoothed data based on adjacency matrix
-    smooth.log.filt.data <- t(tcrossprod(x = adj.mat, y = log.filt.data)/(k-1))
+    smooth.log.filt.data <- Matrix::t(Matrix::tcrossprod(x = adj.mat, y = log.filt.data)/k)
 
     print("kNN Smoothing - Done")
 

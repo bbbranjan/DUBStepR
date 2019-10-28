@@ -1,26 +1,29 @@
 #' @author ranjanb
 #' @title DUBStepR - Obtain a list of feature genes to characterise cell types
-#' @param log.data normalised log-transformed genes x cells single-cell RNA-seq data
+#' @param raw.data raw gene expression matrix (genes x cells)
+#' @param log.normalize boolean indicating whether input matrix needs to be log-normalized. Default is TRUE.
 #' @param min.cells minimum number of cells to filter genes out and smooth data over
-#' @return Returns a list of all feature genes and the optimal feature set
+#' @param k number of nearest neighbours
+#' @return Returns optimal feature set
 #'
 #' @export
 #'
-
-DUBStepR <- function(log.data, min.cells = 0.01*ncol(log.data)) {
+DUBStepR <- function(raw.data, log.normalize = T, min.cells = 0.05 * ncol(raw.data), k = 10) {
+    # Log-normalize data
+    log.data <- logNormalize(raw.data = raw.data)
 
     # Filter genes
     log.filt.data <- getfilteredData(data = log.data, min.cells = min.cells)
 
     # Smooth data using k-NN
-    smooth.log.filt.data <- kNNSmoothing(log.filt.data = log.filt.data)
+    smooth.log.filt.data <- kNNSmoothing(log.filt.data = log.filt.data, k = k)
 
     # Compute gene-gene correlation matrix
     ggc <- getGGC(log.data = smooth.log.filt.data)
 
-    # Order genes and obtain optimal feature set using stepwise regression
-    geneList <- runStepwiseReg(ggc = ggc, smooth.log.filt.data = smooth.log.filt.data)
+    # Obtain optimal feature set using stepwise regression
+    featureSet <- runStepwiseReg(ggc = ggc, log.filt.data = log.filt.data)
 
-    # Return list of feature genes
-    return(geneList)
+    # Return feature genes
+    return(featureSet)
 }
