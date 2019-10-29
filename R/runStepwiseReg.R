@@ -137,7 +137,7 @@ runStepwiseReg <- function(ggc, log.filt.data, k = 10, num.pcs = 15) {
             # Run PCA on the feature data
             log.feature.data <-
                 log.filt.data[neighbour_feature_genes,]
-            pca.data <- irlba::prcomp_irlba(x = Matrix::t(log.feature.data), n = num.pcs, center = TRUE, scale. = FALSE)$x
+            pca.data <- irlba::prcomp_irlba(x = Matrix::t(log.feature.data), n = min(num.pcs, (length(neighbour_feature_genes) - 1)), center = TRUE, scale. = FALSE)$x
             rownames(pca.data) <- colnames(log.feature.data)
 
             # Compute k-NN distance
