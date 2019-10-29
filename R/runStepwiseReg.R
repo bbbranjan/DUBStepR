@@ -128,7 +128,7 @@ runStepwiseReg <- function(ggc, log.filt.data, k = 10) {
             })
 
         # For every 25 genes added
-        if((i%%25 == 0 | length(neighbour_feature_genes) == nrow(ggc)) & numStepsUnchangedMin <= 10) {
+        if((i%%25 == 0 | length(neighbour_feature_genes) == nrow(ggc))) {
 
             # Initialise number of genes
             num_genes = length(neighbour_feature_genes)
