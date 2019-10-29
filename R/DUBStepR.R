@@ -9,8 +9,13 @@
 #' @export
 #'
 DUBStepR <- function(raw.data, log.normalize = T, min.cells = 0.05 * ncol(raw.data), k = 10) {
+
     # Log-normalize data
-    log.data <- logNormalize(raw.data = raw.data)
+    if(log.normalize) {
+        log.data <- logNormalize(raw.data = raw.data)
+    } else {
+        log.data <- raw.data
+    }
 
     # Filter genes
     log.filt.data <- getfilteredData(data = log.data, min.cells = min.cells)
