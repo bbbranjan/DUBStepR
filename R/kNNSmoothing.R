@@ -1,18 +1,19 @@
 #' @title k-NN Smoothing of gene expression data
 #' @param log.filt.data filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix
 #' @param k number of nearest neighbours the data is smoothed over
+#' @param num.pcs number of principal components to represent sc data. Default is 15.
 #' @return k-NN smoothed data matrix
 #'
 #' @export
 #'
 
-kNNSmoothing <- function(log.filt.data, k = 10) {
+kNNSmoothing <- function(log.filt.data, k = 10, num.pcs = 15) {
 
     # Reduce expression data to PC space for k-NN computation
     pca.data <-
         irlba::prcomp_irlba(
             x = t(as.matrix(log.filt.data)),
-            n = 15,
+            n = num.pcs,
             center = TRUE,
             scale. = FALSE
         )$x

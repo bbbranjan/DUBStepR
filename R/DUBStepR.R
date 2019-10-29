@@ -3,12 +3,13 @@
 #' @param raw.data raw gene expression matrix (genes x cells)
 #' @param log.normalize boolean indicating whether input matrix needs to be log-normalized. Default is TRUE.
 #' @param min.cells minimum number of cells to filter genes out and smooth data over
-#' @param k number of nearest neighbours
+#' @param k number of nearest neighbours. Default is 10
+#' @param num.pcs number of principal components to represent sc data. Default is 15.
 #' @return Returns optimal feature set
 #'
 #' @export
 #'
-DUBStepR <- function(raw.data, log.normalize = T, min.cells = 0.05 * ncol(raw.data), k = 10) {
+DUBStepR <- function(raw.data, log.normalize = T, min.cells = 0.05 * ncol(raw.data), k = 10, num.pcs = 15) {
 
     # Log-normalize data
     if(log.normalize) {
@@ -21,13 +22,13 @@ DUBStepR <- function(raw.data, log.normalize = T, min.cells = 0.05 * ncol(raw.da
     log.filt.data <- getfilteredData(data = log.data, min.cells = min.cells)
 
     # Smooth data using k-NN
-    smooth.log.filt.data <- kNNSmoothing(log.filt.data = log.filt.data, k = k)
+    smooth.log.filt.data <- kNNSmoothing(log.filt.data = log.filt.data, k = k, num.pcs = num.pcs)
 
     # Compute gene-gene correlation matrix
     ggc <- getGGC(log.data = smooth.log.filt.data)
 
     # Obtain optimal feature set using stepwise regression
-    featureSet <- runStepwiseReg(ggc = ggc, log.filt.data = log.filt.data)
+    featureSet <- runStepwiseReg(ggc = ggc, log.filt.data = log.filt.data, num.pcs = num.pcs)
 
     # Return feature genes
     return(featureSet)

@@ -5,7 +5,7 @@
 \title{DUBStepR - Obtain a list of feature genes to characterise cell types}
 \usage{
 DUBStepR(raw.data, log.normalize = T, min.cells = 0.05 *
-  ncol(raw.data), k = 10)
+  ncol(raw.data), k = 10, num.pcs = 15)
 }
 \arguments{
 \item{raw.data}{raw gene expression matrix (genes x cells)}
@@ -14,7 +14,9 @@ DUBStepR(raw.data, log.normalize = T, min.cells = 0.05 *
 
 \item{min.cells}{minimum number of cells to filter genes out and smooth data over}
 
-\item{k}{number of nearest neighbours}
+\item{k}{number of nearest neighbours. Default is 10}
+
+\item{num.pcs}{number of principal components to represent sc data. Default is 15.}
 }
 \value{
 Returns optimal feature set
