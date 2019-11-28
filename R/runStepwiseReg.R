@@ -37,7 +37,7 @@ runStepwiseReg <- function(ggc, log.filt.data, k = 10, num.pcs = 15) {
         gSeq = 1:ncol(ggc_ggc)
 
         gNormVec <- sapply(gSeq, function(idx){
-            sqrt(ggc_ggc[idx,idx])
+            sqrt(abs(ggc_ggc[idx,idx]))
         })
 
         # Select gene to regress out
