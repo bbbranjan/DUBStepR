@@ -11,7 +11,7 @@
 DUBStepR <- function(input.data, min.cells = 0.05 * ncol(raw.data), k = 10, num.pcs = 15) {
 
     # Filter genes
-    log.filt.data <- getfilteredData(data = input.data, min.cells = min.cells)
+    filt.data <- getfilteredData(data = input.data, min.cells = min.cells)
 
     # Smooth data using k-NN
     smooth.filt.data <- kNNSmoothing(filt.data = filt.data, k = k, num.pcs = num.pcs)
