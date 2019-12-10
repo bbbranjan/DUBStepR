@@ -1,13 +1,13 @@
 #' @title Run step-wise regression to order the features
 #' @param ggc gene-gene correlation matrix
-#' @param log.filt.data filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix
+#' @param filt.data filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix
 #' @param k number of nearest neighbours for CI computation
 #' @param num.pcs number of principal components to represent sc data. Default is 15.
 #' @return optimal feature set
 #'
 #' @export
 #'
-runStepwiseReg <- function(ggc, log.filt.data, k = 10, num.pcs = 15) {
+runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
 
     # Initialize variables
     ggc_centered <- scale(x = ggc, center = TRUE, scale = FALSE)
@@ -136,7 +136,7 @@ runStepwiseReg <- function(ggc, log.filt.data, k = 10, num.pcs = 15) {
 
             # Run PCA on the feature data
             log.feature.data <-
-                log.filt.data[neighbour_feature_genes,]
+                filt.data[neighbour_feature_genes,]
             pca.data <- irlba::prcomp_irlba(x = Matrix::t(log.feature.data), n = min(num.pcs, (length(neighbour_feature_genes) - 1)), center = TRUE, scale. = FALSE)$x
             rownames(pca.data) <- colnames(log.feature.data)
 

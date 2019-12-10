@@ -4,10 +4,10 @@
 \alias{getGGC}
 \title{Compute the correlation range values for all genes in the gene-gene correlation matrix}
 \usage{
-getGGC(log.data)
+getGGC(data)
 }
 \arguments{
-\item{log.data}{log-transformed gene-expression matrix}
+\item{data}{log-transformed gene-expression matrix}
 }
 \value{
 list of genes with their z-transformed correlation range values

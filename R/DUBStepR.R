@@ -14,13 +14,13 @@ DUBStepR <- function(input.data, min.cells = 0.05 * ncol(raw.data), k = 10, num.
     log.filt.data <- getfilteredData(data = input.data, min.cells = min.cells)
 
     # Smooth data using k-NN
-    smooth.log.filt.data <- kNNSmoothing(log.filt.data = log.filt.data, k = k, num.pcs = num.pcs)
+    smooth.filt.data <- kNNSmoothing(filt.data = filt.data, k = k, num.pcs = num.pcs)
 
     # Compute gene-gene correlation matrix
-    ggc <- getGGC(log.data = smooth.log.filt.data)
+    ggc <- getGGC(data = smooth.filt.data)
 
     # Obtain optimal feature set using stepwise regression
-    featureSet <- runStepwiseReg(ggc = ggc, log.filt.data = log.filt.data, num.pcs = num.pcs)
+    featureSet <- runStepwiseReg(ggc = ggc, filt.data = filt.data, num.pcs = num.pcs)
 
     # Return feature genes
     return(featureSet)

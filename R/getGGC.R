@@ -1,21 +1,21 @@
 #' @title Compute the correlation range values for all genes in the gene-gene correlation matrix
-#' @param log.data log-transformed gene-expression matrix
+#' @param data log-transformed gene-expression matrix
 #' @return list of genes with their z-transformed correlation range values
 #'
 #' @export
 #'
-getGGC <- function(log.data) {
+getGGC <- function(data) {
 
     # Bin genes by mean expression
-    num.bins = 20
-    gene.mean <- Matrix::rowMeans(log.data)
+    num.bins = min(20, (nrow(data)-1))
+    gene.mean <- Matrix::rowMeans(data)
 
     gene.bins <- cut(x = gene.mean, breaks = num.bins)
     names(gene.bins) <- names(gene.mean)
 
     # Run fastCor for quicker correlation matrix computation
     system.time({
-        correlation_matrix <- HiClimR::fastCor(xt = t(as.matrix(log.data)), nSplit = 10, upperTri = T, optBLAS = T)
+        correlation_matrix <- HiClimR::fastCor(xt = t(as.matrix(data)), nSplit = 10, upperTri = T, optBLAS = T)
     })
     correlation_matrix[which(is.na(correlation_matrix))] <- 0
     correlation_matrix <- correlation_matrix + t(correlation_matrix)
@@ -30,6 +30,10 @@ getGGC <- function(log.data) {
     zRangeList <- tapply(X = logRange, INDEX = gene.bins, FUN = function(x){
         (x - mean(x))/stats::sd(x)
     })
+
+    if(all(is.na(zRangeList))) {
+        stop("Feature correlation range could not be obtained.")
+    }
 
     # Set NAs to 0
     zRangeList <- lapply(zRangeList, function(x){

@@ -4,12 +4,12 @@
 \alias{runStepwiseReg}
 \title{Run step-wise regression to order the features}
 \usage{
-runStepwiseReg(ggc, log.filt.data, k = 10, num.pcs = 15)
+runStepwiseReg(ggc, filt.data, k = 10, num.pcs = 15)
 }
 \arguments{
 \item{ggc}{gene-gene correlation matrix}
 
-\item{log.filt.data}{filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix}
+\item{filt.data}{filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix}
 
 \item{k}{number of nearest neighbours for CI computation}
 
