@@ -1,0 +1,12 @@
+INFO [2019-12-10 18:08:08] $x
+INFO [2019-12-10 18:08:08] list(all.markers$gene, VariableFeatures(object = seuratObj))
+INFO [2019-12-10 18:08:08] 
+INFO [2019-12-10 18:08:08] $category.names
+INFO [2019-12-10 18:08:08] c("DE Genes", "DUBStepR Features")
+INFO [2019-12-10 18:08:08] 
+INFO [2019-12-10 18:08:08] $filename
+INFO [2019-12-10 18:08:08] [1] "images/DE_DUBStepR_Overlap.png"
+INFO [2019-12-10 18:08:08] 
+INFO [2019-12-10 18:08:08] $output
+INFO [2019-12-10 18:08:08] [1] TRUE
+INFO [2019-12-10 18:08:08] 
