@@ -98,24 +98,24 @@ We select 10 PCs for clustering, and visualize the cells in a 2D uMAP.
 seuratObj <- FindNeighbors(seuratObj, reduction = "pca", dims = 1:10)
 seuratObj <- FindClusters(seuratObj, resolution = 0.4)
 seuratObj <- RunUMAP(seuratObj, dims = 1:10, n.components = 2, seed.use = 2019)
-DimPlot(seuratObj, reduction = "umap", label = T)
+DimPlot(seuratObj, reduction = "umap", label = TRUE, pt.size = 0.5, repel = T, label.size = 5)
 ```
 
 ![](images/5k_0.4_Cluster_Plot.png "Cluster Plot")
 
 We select the first few feature genes selected by DUBStepR to show cell type specific expression
 ```R
-FeaturePlot(seuratObj, features = VariableFeatures(object = seuratObj)[1:16], )
+FeaturePlot(seuratObj, features = VariableFeatures(object = seuratObj)[1:16], cols = c("lightgrey", "magenta"))
 ```
 
 ![](images/5k_DUBStepR_Feature_Plot.png "DUBStepR Feature Plot")
 
 Using known marker genes, we show cell type specific regions of the UMAP
 ```R
-FeaturePlot(seuratObj, features = c("MS4A1", "GNLY", "NKG7", "CD3E", "CD14", "FCER1A", "CST3", "FCGR3A", "LYZ", "PPBP", "CD8A", "IL7R", "CCR7", "S100A4", "MS4A7", "CD79A"))
+FeaturePlot(seuratObj, features = c("MS4A1", "GNLY", "NKG7", "CD3E", "CD14", "FCER1A", "CST3", "FCGR3A", "LYZ", "PPBP", "CD8A", "IL7R", "CCR7", "S100A4", "SERPINF1", "CD79A"))
 ```
 
-![](images/5k_Canonical_Feature_Plot.png "Known Markers Feature Plot")
+![](images/5k_Canonical_Feature_Plot.png "Canonical Feature Plot")
 
 Annotating clusters using gene expression
 
@@ -123,7 +123,7 @@ Annotating clusters using gene expression
 cell.types <- c("Naive CD4+ T cells", "CD14+ Monocytes", "CD8+ T cells", "NK cells", "Memory CD4+ T cells", "Naive B cells", "Memory B cells", "FCGR3A+ Monocytes", "mDC", "Platelets", "pDC", "Unknown")
 names(cell.types) <- levels(seuratObj)
 seuratObj <- RenameIdents(seuratObj, cell.types)
-DimPlot(seuratObj, reduction = "umap", label = TRUE, pt.size = 0.5, repel = T) + NoLegend()
+DimPlot(seuratObj, reduction = "umap", label = TRUE, pt.size = 0.5, repel = T, label.size = 5) + NoLegend()
 ```
 
 ![](images/5k_0.4_Labelled_Cluster_Plot.png "Cluster Plot")
