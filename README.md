@@ -75,22 +75,29 @@ seuratObj@assays$RNA@var.features <- DUBStepR(input.data = seuratObj@assays$RNA@
 ---> Splitting data matrix: 9 splits of 11769x1204 size
 ---> Splitting data matrix: 1 split of 11769x1211 size
 [1] "Running Stepwise Regression"
-  |=============================================================================================================================| 100%[1] "Determining optimal feature set"
-  |=============================================================================================================================| 100%
+|=============================================================================================================================| 100%[1] "Determining optimal feature set"
+|=============================================================================================================================| 100%
 ```
 
 
 ### Visualize and cluster cells
 
-We first visualize the cells on a 2D UMAP projection
+Following Seurat's recommendations, we scale the gene expression data and run Principal Component Analysis (PCA). We then visualize the standard deviation of PCs using an elbow plot and select the number of PCs we think is sufficient to explain the variance in the dataset.
 
 ```R
 seuratObj <- ScaleData(seuratObj, features = rownames(seuratObj))
 seuratObj <- RunPCA(seuratObj, features = VariableFeatures(object = seuratObj))
 ElbowPlot(seuratObj)
+```
+![](images/5k_Elbow_Plot.png "Elbow Plot")
+
+
+We select 10 PCs for clustering, and visualize the cells in a 2D uMAP.
+
+```
 seuratObj <- FindNeighbors(seuratObj, reduction = "pca", dims = 1:10)
 seuratObj <- FindClusters(seuratObj, resolution = 0.4)
-seuratObj <- RunUMAP(seuratObj, dims = 1:10, n.components = 2)
+seuratObj <- RunUMAP(seuratObj, dims = 1:10, n.components = 2, seed.use = 2019)
 DimPlot(seuratObj, reduction = "umap", label = T)
 ```
 
@@ -113,7 +120,7 @@ FeaturePlot(seuratObj, features = c("MS4A1", "GNLY", "NKG7", "CD3E", "CD14", "FC
 Annotating clusters using gene expression
 
 ```R
-cell.types <- c("Naive CD4+ T cells", "CD14+ Monocytes", "CD8+ T cells", "NK cells", "Memory CD4+ T cells", "TCL1A+ B cells", "TCL1A- B cells", "FCGR3A+ Monocytes", "mDC", "Platelets", "pDC", "Progenitors")
+cell.types <- c("Naive CD4+ T cells", "CD14+ Monocytes", "CD8+ T cells", "NK cells", "Memory CD4+ T cells", "Naive B cells", "Memory B cells", "FCGR3A+ Monocytes", "mDC", "Platelets", "pDC", "Unknown")
 names(cell.types) <- levels(seuratObj)
 seuratObj <- RenameIdents(seuratObj, cell.types)
 DimPlot(seuratObj, reduction = "umap", label = TRUE, pt.size = 0.5, repel = T) + NoLegend()
