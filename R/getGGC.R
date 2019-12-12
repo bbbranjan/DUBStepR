@@ -14,12 +14,16 @@ getGGC <- function(data) {
     names(gene.bins) <- names(gene.mean)
 
     # Run fastCor for quicker correlation matrix computation
-    system.time({
-        correlation_matrix <- HiClimR::fastCor(xt = t(as.matrix(data)), nSplit = 10, upperTri = T, optBLAS = T)
-    })
-    correlation_matrix[which(is.na(correlation_matrix))] <- 0
-    correlation_matrix <- correlation_matrix + t(correlation_matrix)
-    diag(correlation_matrix) <- 1
+    if(require(HiClimR)) {
+        correlation_matrix <- HiClimR::fastCor(xt = t(as.matrix(data)), nSplit = 10, upperTri = T, optBLAS = T, verbose = F)
+        correlation_matrix[which(is.na(correlation_matrix))] <- 0
+        correlation_matrix <- correlation_matrix + t(correlation_matrix)
+        diag(correlation_matrix) <- 1
+    } else {
+        correlation_matrix <- cor(x = as.matrix(t(data)), method = "pearson")
+    }
+
+
 
     # Obtain correlation range
     rangeObj <- getCorrelationRange(correlation_matrix = correlation_matrix)

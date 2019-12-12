@@ -18,11 +18,15 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
     names(scree_values) <- c("0")
     feature_genes <- c()
 
+    # Progress bar
+    print("Running Stepwise Regression")
+    pb <- txtProgressBar(style = 3)
+
     # For each step in the stepwise regression process
     for(i in step_seq) {
 
-        # Print statement
-        print(paste("Num genes:", i))
+        # Set progress bar
+        setTxtProgressBar(pb = pb, value = i/num_steps)
 
         # Compute GGC'*GGC
         ggc_ggc <- t(ggc_centered) %*% ggc_centered
@@ -97,8 +101,15 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
     numStepsUnchangedMin = 0
     minNumGenes = ""
 
+    # Progress bar
+    print("Determining optimal feature set")
+    pb <- txtProgressBar(min = 1, max = (nrow(ggc) - length(neighbour_feature_genes)), style = 3)
+
     # Adding neighbours of each gene
     for (i in 1:(nrow(ggc) - length(neighbour_feature_genes))) {
+
+        # Set progress bar
+        setTxtProgressBar(pb = pb, value = i)
 
         # Select potential candidates for next neighbour
         candidateGGCNames <-
@@ -184,8 +195,6 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
             } else {
                 numStepsUnchangedMin = numStepsUnchangedMin + 1
             }
-
-            print(minNumGenes)
 
         }
     }
