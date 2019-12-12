@@ -50,7 +50,7 @@ seuratObj
 ```
 ```
 An object of class Seurat 
-33538 features across 4285 samples within 1 assay 
+33538 features across 5025 samples within 1 assay 
 Active assay: RNA (33538 features)
 ```
 
@@ -121,19 +121,3 @@ DimPlot(seuratObj, reduction = "umap", label = TRUE, pt.size = 0.5, repel = T) +
 
 ![](images/5k_0.4_Labelled_Cluster_Plot.png "Cluster Plot")
 
-
-
-Since DUBStepR predicts cell type specific feature genes, the feature genes predicted by DUBStepR should be differentially expressed. We look for markers using Seurat's recommended settings.
-
-
-```R
-all.markers <- FindAllMarkers(seuratObj, only.pos = FALSE, min.pct = 0.25, logfc.threshold = 1)
-unique.markers <- unique(all.markers$gene)
-100*sum(VariableFeatures(object = seuratObj) %in% unique.markers)/length(VariableFeatures(object = seuratObj))
-```
-
-```
-[1] 81.65138
-```
-
-This shows that 81.65% of the feature genes picked by DUBStepR were differentially expressed - thus validating its performance as a feature selection algorithm for cell type identification.
