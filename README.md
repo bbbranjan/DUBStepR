@@ -92,7 +92,7 @@ ElbowPlot(seuratObj)
 ![](images/5k_Elbow_Plot.png "Elbow Plot")
 
 
-We select 10 PCs for clustering, and visualize the cells in a 2D uMAP.
+We select 10 PCs for clustering, and visualize the cells in a 2D UMAP.
 
 ```
 seuratObj <- FindNeighbors(seuratObj, reduction = "pca", dims = 1:10)
