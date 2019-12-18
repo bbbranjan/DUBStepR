@@ -14,6 +14,11 @@ kNNSmoothing <- function(filt.data, k = 10, num.pcs = 15) {
         stop("k is too large for the input data.")
     }
 
+    if(k == 1) {
+        print("No kNN Smoothing required.")
+        return(filt.data)
+    }
+
     if(num.pcs > nrow(filt.data)) {
         stop("num.pcs is too large for the input data.")
     }
