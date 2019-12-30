@@ -7,7 +7,7 @@
 #' @export
 #'
 
-kNNSmoothing <- function(filt.data, k = 10, num.pcs = 15) {
+kNNSmoothing <- function(filt.data, k = 1, num.pcs = 15) {
 
     # Sanity checks
     if(k > ncol(filt.data)) {
