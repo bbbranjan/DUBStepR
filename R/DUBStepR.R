@@ -8,13 +8,19 @@
 #'
 #' @export
 #'
-DUBStepR <- function(input.data, min.cells = 100, k = 1, num.pcs = 15) {
+DUBStepR <- function(input.data, min.cells = 100, k = 10, smooth = F, num.pcs = 15) {
 
     # Filter genes
     filt.data <- getfilteredData(data = input.data, min.cells = min.cells)
 
     # Smooth data using k-NN
-    smooth.filt.data <- kNNSmoothing(filt.data = filt.data, k = k, num.pcs = num.pcs)
+    if(smooth)
+        smooth.filt.data <- kNNSmoothing(filt.data = filt.data, k = k, num.pcs = num.pcs)
+    else {
+        print("No kNN Smoothing required.")
+        smooth.filt.data <- filt.data
+    }
+
 
     # Compute gene-gene correlation matrix
     ggc <- getGGC(data = smooth.filt.data)
