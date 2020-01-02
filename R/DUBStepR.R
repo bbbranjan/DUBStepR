@@ -2,7 +2,8 @@
 #' @title DUBStepR - Obtain a list of feature genes to characterise cell types
 #' @param input.data input gene expression matrix (genes x cells)
 #' @param min.cells minimum number of cells to filter genes out and smooth data over
-#' @param k number of nearest neighbours. Default is 1 - no smoothing.
+#' @param k number of nearest neighbours. Default is 10 - no smoothing.
+#' @param smooth Boolean determining whether smoothing is necessary or not.
 #' @param num.pcs number of principal components to represent sc data. Default is 15.
 #' @return Returns optimal feature set
 #'

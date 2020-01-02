@@ -4,14 +4,17 @@
 \alias{DUBStepR}
 \title{DUBStepR - Obtain a list of feature genes to characterise cell types}
 \usage{
-DUBStepR(input.data, min.cells = 100, k = 1, num.pcs = 15)
+DUBStepR(input.data, min.cells = 100, k = 10, smooth = F,
+  num.pcs = 15)
 }
 \arguments{
 \item{input.data}{input gene expression matrix (genes x cells)}
 
 \item{min.cells}{minimum number of cells to filter genes out and smooth data over}
 
-\item{k}{number of nearest neighbours. Default is 1 - no smoothing.}
+\item{k}{number of nearest neighbours. Default is 10 - no smoothing.}
+
+\item{smooth}{Boolean determining whether smoothing is necessary or not.}
 
 \item{num.pcs}{number of principal components to represent sc data. Default is 15.}
 }
