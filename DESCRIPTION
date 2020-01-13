@@ -8,5 +8,8 @@ Description: Obtain a list of feature genes to characterise cell types in scRNA-
 License: MIT
 Encoding: UTF-8
 LazyData: true
-Imports: Matrix, BiocManager, impute, GO.db, preprocessCore, WGCNA, tibble, MASS, matrixcalc, Rfast, flashClust, RANN, HiClimR, qlcMatrix, parallel, irlba, igraph, reshape2, stats, FNN
+Imports: Matrix, BiocManager, tibble, MASS, matrixcalc, Rfast, flashClust, RANN, HiClimR, qlcMatrix, parallel, irlba, igraph, reshape2, stats, FNN
 RoxygenNote: 6.1.1
+Suggests: 
+    testthat (>= 2.1.0),
+    usethis
