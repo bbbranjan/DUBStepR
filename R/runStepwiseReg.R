@@ -203,5 +203,5 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
     optimal_feature_genes <- neighbour_feature_genes[1:as.numeric(names(minNumGenes))]
 
     # Return
-    return(optimal_feature_genes)
+    return(list("optimal.feature.genes" = optimal_feature_genes, "feature.genes" = neighbour_feature_genes, "density.index" = mean_knn_vec))
 }

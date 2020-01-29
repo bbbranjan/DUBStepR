@@ -24,11 +24,14 @@ DUBStepR <- function(input.data, min.cells = 100, k = 10, smooth = F, num.pcs = 
 
 
     # Compute gene-gene correlation matrix
-    ggc <- getGGC(data = smooth.filt.data)
+    ggc.out <- getGGC(data = smooth.filt.data)
 
     # Obtain optimal feature set using stepwise regression
-    featureSet <- runStepwiseReg(ggc = ggc, filt.data = filt.data, k = k, num.pcs = num.pcs)
+    swreg.out <- runStepwiseReg(ggc = ggc.out$ggc, filt.data = filt.data, k = k, num.pcs = num.pcs)
+
+    corr.info <- data.frame(feature.genes = swreg.out$feature.genes, corr.range = ggc.out$corr.range[swreg.out$feature.genes])
+    dubStepR.out <- list("corr.info" = corr.info, "optimal.feature.genes" = swreg.out$optimal.feature.genes, "density.index" = swreg.out$density.index)
 
     # Return feature genes
-    return(featureSet)
+    return(dubStepR.out)
 }
