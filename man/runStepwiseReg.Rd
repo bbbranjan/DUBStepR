@@ -4,7 +4,7 @@
 \alias{runStepwiseReg}
 \title{Run step-wise regression to order the features}
 \usage{
-runStepwiseReg(ggc, filt.data, k = 10, num.pcs = 15)
+runStepwiseReg(ggc, filt.data, k = 10, num.pcs = 15, eps = 0)
 }
 \arguments{
 \item{ggc}{gene-gene correlation matrix}
@@ -14,6 +14,8 @@ runStepwiseReg(ggc, filt.data, k = 10, num.pcs = 15)
 \item{k}{number of nearest neighbours for CI computation}
 
 \item{num.pcs}{number of principal components to represent sc data. Default is 15.}
+
+\item{eps}{Acceptable error margin for kNN computation. Default is 0.}
 }
 \value{
 optimal feature set

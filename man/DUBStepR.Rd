@@ -4,8 +4,14 @@
 \alias{DUBStepR}
 \title{DUBStepR - Obtain a list of feature genes to characterise cell types}
 \usage{
-DUBStepR(input.data, min.cells = 100, k = 10, smooth = F,
-  num.pcs = 15)
+DUBStepR(
+  input.data,
+  min.cells = 100,
+  k = 10,
+  smooth = F,
+  num.pcs = 15,
+  eps = 0
+)
 }
 \arguments{
 \item{input.data}{input gene expression matrix (genes x cells)}
@@ -17,6 +23,8 @@ DUBStepR(input.data, min.cells = 100, k = 10, smooth = F,
 \item{smooth}{Boolean determining whether smoothing is necessary or not.}
 
 \item{num.pcs}{number of principal components to represent sc data. Default is 15.}
+
+\item{eps}{Acceptable error margin for kNN computation. Default is 0.}
 }
 \value{
 Returns optimal feature set

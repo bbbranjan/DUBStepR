@@ -5,11 +5,12 @@
 #' @param k number of nearest neighbours. Default is 10 - no smoothing.
 #' @param smooth Boolean determining whether smoothing is necessary or not.
 #' @param num.pcs number of principal components to represent sc data. Default is 15.
+#' @param eps Acceptable error margin for kNN computation. Default is 0.
 #' @return Returns optimal feature set
 #'
 #' @export
 #'
-DUBStepR <- function(input.data, min.cells = 100, k = 10, smooth = F, num.pcs = 15) {
+DUBStepR <- function(input.data, min.cells = 100, k = 10, smooth = F, num.pcs = 15, eps = 0) {
 
     # Filter genes
     filt.data <- getfilteredData(data = input.data, min.cells = min.cells)
@@ -27,7 +28,7 @@ DUBStepR <- function(input.data, min.cells = 100, k = 10, smooth = F, num.pcs = 
     ggc.out <- getGGC(data = smooth.filt.data)
 
     # Obtain optimal feature set using stepwise regression
-    swreg.out <- runStepwiseReg(ggc = ggc.out$ggc, filt.data = filt.data, k = k, num.pcs = num.pcs)
+    swreg.out <- runStepwiseReg(ggc = ggc.out$ggc, filt.data = filt.data, k = k, num.pcs = num.pcs, eps = eps)
 
     corr.info <- data.frame(feature.genes = swreg.out$feature.genes, corr.range = ggc.out$corr.range[swreg.out$feature.genes])
     dubStepR.out <- list("corr.info" = corr.info, "optimal.feature.genes" = swreg.out$optimal.feature.genes, "density.index" = swreg.out$density.index)
