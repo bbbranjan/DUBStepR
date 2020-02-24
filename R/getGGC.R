@@ -6,6 +6,8 @@
 #'
 getGGC <- function(data) {
 
+    print("Computing GGC..")
+
     # Bin genes by mean expression
     num.bins = min(20, (nrow(data)-1))
     gene.mean <- Matrix::rowMeans(data)
@@ -13,17 +15,12 @@ getGGC <- function(data) {
     gene.bins <- cut(x = gene.mean, breaks = num.bins)
     names(gene.bins) <- names(gene.mean)
 
-    # Run fastCor for quicker correlation matrix computation
-    if(require(HiClimR)) {
-        correlation_matrix <- HiClimR::fastCor(xt = t(as.matrix(data)), nSplit = 10, upperTri = T, optBLAS = T, verbose = F)
-        correlation_matrix[which(is.na(correlation_matrix))] <- 0
-        correlation_matrix <- correlation_matrix + t(correlation_matrix)
-        diag(correlation_matrix) <- 1
-    } else {
-        correlation_matrix <- cor(x = as.matrix(t(data)), method = "pearson")
-    }
+    # Compute correlation matrix
+    t_data <- Matrix::t(data)
+    correlation_matrix <- qlcMatrix::corSparse(X = t_data, Y = NULL)
+    dimnames(correlation_matrix) <- list(rownames(data), rownames(data))
 
-
+    print("done.")
 
     # Obtain correlation range
     rangeObj <- getCorrelationRange(correlation_matrix = correlation_matrix)

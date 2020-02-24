@@ -3,18 +3,21 @@
 #' @param filt.data filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix
 #' @param k number of nearest neighbours for CI computation
 #' @param num.pcs number of principal components to represent sc data. Default is 15.
+#' @param eps Acceptable error margin for kNN computation. Default is 0.
 #' @return optimal feature set
 #'
 #' @export
 #'
-runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
+runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15, eps = 0) {
 
     # Initialize variables
-    ggc_centered <- scale(x = ggc, center = TRUE, scale = FALSE)
+    ggc <- as(ggc, "dgCMatrix")
+
+    ggc_centered <- ggc - Matrix::Matrix(data = Matrix::colMeans(ggc), ncol = ncol(ggc), nrow = nrow(ggc), byrow = T)
     step = 1
     num_steps = 100
     step_seq = seq(from = step, to = num_steps, by = step)
-    scree_values <- c(matrixcalc::frobenius.norm(ggc_centered))
+    scree_values <- c(matrixcalc::frobenius.norm(x = as.matrix(ggc_centered)))
     names(scree_values) <- c("0")
     feature_genes <- c()
 
@@ -25,43 +28,45 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
     # For each step in the stepwise regression process
     for(i in step_seq) {
 
-        # Set progress bar
-        setTxtProgressBar(pb = pb, value = i/num_steps)
+        system.time({
 
-        # Compute GGC'*GGC
-        ggc_ggc <- t(ggc_centered) %*% ggc_centered
-        dimnames(ggc_ggc) <- dimnames(ggc_centered)
+            # Set progress bar
+            setTxtProgressBar(pb = pb, value = i / num_steps)
 
-        # Compute variance explained
-        gcNormVec <- apply(ggc_ggc, 1, function(x){
-            matrixcalc::frobenius.norm(x)
+            # Compute GGC'*GGC
+            ggc_ggc <- Matrix::t(ggc_centered) %*% ggc_centered
+            dimnames(ggc_ggc) <- dimnames(ggc_centered)
+
+            # Compute variance explained
+            gcNormVec <- apply(ggc_ggc, 1, function(x) {
+                matrixcalc::frobenius.norm(x)
+            })
+
+            # Compute norm of gene vectors
+            gNormVec <- sqrt(abs(Matrix::diag(x = ggc_ggc)))
+
+            # Select gene to regress out
+            varExpVec <- gcNormVec / gNormVec
+            regressed.genes <-
+                names(sort(varExpVec, decreasing = T))[1:step]
+
+            # Add regressed gene to feature set
+            feature_genes <- union(feature_genes, regressed.genes)
+
+            # Obtain the variance explained by the regressed genes
+            regressed.g <- ggc_centered[, regressed.genes]
+            gtg <- as.numeric(t(regressed.g) %*% regressed.g)
+            explained <-
+                (regressed.g %*% t(ggc_ggc[regressed.genes, ])) / gtg
+            eps <- ggc_centered - explained
+
+            # Append variance explained value to vector for scree plot
+            scree_values[paste0(i)] <- sum(varExpVec[regressed.genes])
         })
-
-        # Compute norm of gene vectors
-        gSeq = 1:ncol(ggc_ggc)
-
-        gNormVec <- sapply(gSeq, function(idx){
-            sqrt(abs(ggc_ggc[idx,idx]))
-        })
-
-        # Select gene to regress out
-        varExpVec <- gcNormVec/gNormVec
-        regressed.genes <- names(sort(varExpVec, decreasing = T))[1:step]
-
-        # Add regressed gene to feature set
-        feature_genes <- union(feature_genes, regressed.genes)
-
-        # Obtain the variance explained by the regressed genes
-        regressed.g <- ggc_centered[, regressed.genes]
-        gtg <- as.numeric(t(regressed.g) %*% regressed.g)
-        explained <- (regressed.g %*% t(ggc_ggc[regressed.genes,]))/gtg
-        eps <- ggc_centered - explained
-
-        # Append variance explained value to vector for scree plot
-        scree_values[paste0(i)] <- sum(varExpVec[regressed.genes])
 
         # Update the GGC to be the residual after regressing out these genes
         ggc_centered = eps
+
 
     }
 
@@ -96,7 +101,7 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
             x[which.max(x)]
         })
 
-    # Use Compactness Index (CI) as stopping criterion
+    # Use Density Index (DI) as stopping criterion
     mean_knn_vec <- c()
     numStepsUnchangedMin = 0
     minNumGenes = ""
@@ -107,6 +112,8 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
 
     # Adding neighbours of each gene
     for (i in 1:(nrow(ggc) - length(neighbour_feature_genes))) {
+
+        system.time({
 
         # Set progress bar
         setTxtProgressBar(pb = pb, value = i)
@@ -148,27 +155,21 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
             # Run PCA on the feature data
             log.feature.data <-
                 filt.data[neighbour_feature_genes,]
-            pca.data <- irlba::prcomp_irlba(x = Matrix::t(log.feature.data), n = min(num.pcs, (length(neighbour_feature_genes) - 1)), center = TRUE, scale. = FALSE)$x
+            pca.obj <- irlba::prcomp_irlba(x = Matrix::t(log.feature.data), n = min(num.pcs, (length(neighbour_feature_genes) - 1)), center = TRUE, scale. = FALSE)
+            pca.data <- pca.obj$x
             rownames(pca.data) <- colnames(log.feature.data)
 
             # Compute k-NN distance
             system.time(
-                my.knn <- RANN::nn2(
+                my.knn.2 <- RANN::nn2(
                     data = pca.data,
                     k = (k+1),
                     treetype = "kd",
                     searchtype = "standard",
-                    eps = 0
+                    eps = eps
                 )
             )
 
-            # system.time(
-            #     nn.dists <- FNN::knn.dist(
-            #         data = pca.data,
-            #         k = 11,
-            #         algorithm = "CR"
-            #     )
-            # )
             nn.dists <- my.knn$nn.dists
             rownames(nn.dists) <- rownames(pca.data)
 
@@ -176,9 +177,7 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
             nn.dists <- nn.dists[, -1]
 
             # Calculate length scale to normalise distances
-            sdVec <- apply(X = pca.data,
-                           MARGIN = 2,
-                           FUN = stats::sd)
+            sdVec <- pca.obj$sdev
             length_scale <- sqrt(sum(sdVec ^ 2))
 
             # Scale k-NN distances by length scale
@@ -197,6 +196,7 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15) {
             }
 
         }
+        })
     }
 
     # Determine optimal feature set
