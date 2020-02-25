@@ -10,7 +10,7 @@ DUBStepR(
   k = 10,
   smooth = F,
   num.pcs = 15,
-  eps = 0
+  error = 0
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ DUBStepR(
 
 \item{num.pcs}{number of principal components to represent sc data. Default is 15.}
 
-\item{eps}{Acceptable error margin for kNN computation. Default is 0.}
+\item{error}{Acceptable error margin for kNN computation. Default is 0.}
 }
 \value{
 Returns optimal feature set
