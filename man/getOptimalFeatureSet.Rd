@@ -2,18 +2,33 @@
 % Please edit documentation in R/getOptimalFeatureSet.R
 \name{getOptimalFeatureSet}
 \alias{getOptimalFeatureSet}
-\title{Determine the optimal feature set using Compactness Index (CI)}
+\title{Determine the optimal feature set using Density Index (DI)}
 \usage{
-getOptimalFeatureSet(log.data, ordered.genes)
+getOptimalFeatureSet(
+  filt.data,
+  ordered.genes,
+  elbow.pt = 25,
+  k = 10,
+  num.pcs = 15,
+  error = 0
+)
 }
 \arguments{
-\item{log.data}{log-transformed gene-expression matrix}
+\item{filt.data}{log-transformed filtered gene-expression matrix}
 
 \item{ordered.genes}{genes ordered after stepwise regression}
+
+\item{elbow.pt}{Elbow point to start determining optimal feature set}
+
+\item{k}{number of nearest neighbours for CI computation}
+
+\item{num.pcs}{number of principal components to represent sc data. Default is 15.}
+
+\item{error}{Acceptable error margin for kNN computation. Default is 0.}
 }
 \value{
-optimal feature set
+optimal set of feature genes
 }
 \description{
-Determine the optimal feature set using Compactness Index (CI)
+Determine the optimal feature set using Density Index (DI)
 }

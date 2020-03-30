@@ -7,8 +7,8 @@
 DUBStepR(
   input.data,
   min.cells = 100,
+  optimise.features = F,
   k = 10,
-  smooth = F,
   num.pcs = 15,
   error = 0
 )
@@ -18,9 +18,9 @@ DUBStepR(
 
 \item{min.cells}{minimum number of cells to filter genes out and smooth data over}
 
-\item{k}{number of nearest neighbours. Default is 10 - no smoothing.}
+\item{optimise.features}{Determine optimal feature set using density index. (Time-consuming step).}
 
-\item{smooth}{Boolean determining whether smoothing is necessary or not.}
+\item{k}{number of nearest neighbours. Default is 10.}
 
 \item{num.pcs}{number of principal components to represent sc data. Default is 15.}
 

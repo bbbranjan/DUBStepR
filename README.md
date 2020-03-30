@@ -66,7 +66,7 @@ seuratObj <- NormalizeData(object = seuratObj, normalization.method = "LogNormal
 DUBStepR can be inserted into the Seurat workflow at this stage, and we recommend that be done in the following manner:
 
 ```R
-dubstepR.out <- DUBStepR(input.data = seuratObj@assays$RNA@data, min.cells = 0.01*ncol(seuratObj), k = 10, num.pcs = 15)
+dubstepR.out <- DUBStepR(input.data = seuratObj@assays$RNA@data, min.cells = 0.01*ncol(seuratObj), optimise.features = T, k = 10, num.pcs = 15, error = 0)
 seuratObj@assays$RNA@var.features <- dubstepR.out$optimal.feature.genes
 ```
 ```

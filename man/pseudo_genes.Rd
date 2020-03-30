@@ -4,7 +4,9 @@
 \name{pseudo_genes}
 \alias{pseudo_genes}
 \title{Pseudo-genes}
-\format{An object of class \code{character} of length 14627.}
+\format{
+An object of class \code{character} of length 14627.
+}
 \source{
 \href{http://www.ensembl.org}{ENSEMBL}
 }

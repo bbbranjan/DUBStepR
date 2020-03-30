@@ -1,14 +1,11 @@
 #' @title Run step-wise regression to order the features
 #' @param ggc gene-gene correlation matrix
 #' @param filt.data filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix
-#' @param k number of nearest neighbours for CI computation
-#' @param num.pcs number of principal components to represent sc data. Default is 15.
-#' @param error Acceptable error margin for kNN computation. Default is 0.
 #' @return optimal feature set
 #'
 #' @export
 #'
-runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15, error = 0) {
+runStepwiseReg <- function(ggc, filt.data) {
 
     # Initialize variables
     ggc <- as(ggc, "dgCMatrix")
@@ -101,19 +98,13 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15, error = 0) {
             x[which.max(x)]
         })
 
-    # Use Density Index (DI) as stopping criterion
-    mean_knn_vec <- c()
-    numStepsUnchangedMin = 0
-    minNumGenes = ""
-
     # Progress bar
-    print("Determining optimal feature set")
+    print("\n")
+    print("Adding correlated features")
     pb <- txtProgressBar(min = 1, max = (nrow(ggc) - length(neighbour_feature_genes)), style = 3)
 
     # Adding neighbours of each gene
     for (i in 1:(nrow(ggc) - length(neighbour_feature_genes))) {
-
-        system.time({
 
         # Set progress bar
         setTxtProgressBar(pb = pb, value = i)
@@ -145,66 +136,8 @@ runStepwiseReg <- function(ggc, filt.data, k = 10, num.pcs = 15, error = 0) {
             lapply(ggc_list[neighbour_feature_genes], function(x) {
                 x[which.max(x)]
             })
-
-        # For every 25 genes added
-        if((i%%25 == 0 | length(neighbour_feature_genes) == nrow(ggc))) {
-
-            # Initialise number of genes
-            num_genes = length(neighbour_feature_genes)
-
-            # Run PCA on the feature data
-            log.feature.data <-
-                filt.data[neighbour_feature_genes,]
-            pca.obj <- irlba::prcomp_irlba(x = Matrix::t(log.feature.data), n = min(num.pcs, (length(neighbour_feature_genes) - 1)), center = TRUE, scale. = FALSE)
-
-            # spca.obj <- sparsepca::rspca(X = Matrix::t(log.feature.data), k = min(num.pcs, (length(neighbour_feature_genes) - 1)), center = TRUE, scale = FALSE)
-
-            pca.data <- pca.obj$x
-            rownames(pca.data) <- colnames(log.feature.data)
-
-            # Compute k-NN distance
-            system.time(
-                my.knn <- RANN::nn2(
-                    data = pca.data,
-                    k = (k+1),
-                    treetype = "kd",
-                    searchtype = "standard",
-                    eps = error
-                )
-            )
-
-            nn.dists <- my.knn$nn.dists
-            rownames(nn.dists) <- rownames(pca.data)
-
-            # Remove first column as it consists of zeroes
-            nn.dists <- nn.dists[, -1]
-
-            # Calculate length scale to normalise distances
-            sdVec <- pca.obj$sdev
-            length_scale <- sqrt(sum(sdVec ^ 2))
-
-            # Scale k-NN distances by length scale
-            mean_nn_dist <- mean(x = nn.dists)
-            scaled_mean_nn_dist <- mean_nn_dist / length_scale
-            names(scaled_mean_nn_dist) <- num_genes
-
-            mean_knn_vec <- append(mean_knn_vec, scaled_mean_nn_dist)
-
-            # Check if the minima has been updated
-            if(which.min(mean_knn_vec) != minNumGenes) {
-                minNumGenes = which.min(mean_knn_vec)
-                numStepsUnchangedMin = 0
-            } else {
-                numStepsUnchangedMin = numStepsUnchangedMin + 1
-            }
-
-        }
-        })
     }
 
-    # Determine optimal feature set
-    optimal_feature_genes <- neighbour_feature_genes[1:as.numeric(names(minNumGenes))]
-
     # Return
-    return(list("optimal.feature.genes" = optimal_feature_genes, "feature.genes" = neighbour_feature_genes, "density.index" = mean_knn_vec))
+    return(list("feature.genes" = neighbour_feature_genes, "elbow_point" = elbow_id))
 }

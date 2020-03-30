@@ -4,18 +4,12 @@
 \alias{runStepwiseReg}
 \title{Run step-wise regression to order the features}
 \usage{
-runStepwiseReg(ggc, filt.data, k = 10, num.pcs = 15, error = 0)
+runStepwiseReg(ggc, filt.data)
 }
 \arguments{
 \item{ggc}{gene-gene correlation matrix}
 
 \item{filt.data}{filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix}
-
-\item{k}{number of nearest neighbours for CI computation}
-
-\item{num.pcs}{number of principal components to represent sc data. Default is 15.}
-
-\item{error}{Acceptable error margin for kNN computation. Default is 0.}
 }
 \value{
 optimal feature set
