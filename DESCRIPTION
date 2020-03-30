@@ -4,12 +4,12 @@ Title: DUBStepR
 Version: 1.0
 Author: Bobby Ranjan
 Maintainer: Bobby Ranjan <ranjanb@gis.a-star.edu.sg>
-Description: Obtain a list of feature genes to characterise cell types in scRNA-seq data.
+Description: DUBStepR determines the optimal set of feature genes to characterise cell types in scRNA-seq data using stepwise regression on gene-gene correlations.
 License: MIT
 Encoding: UTF-8
 LazyData: true
 Imports: Matrix, BiocManager, tibble, MASS, matrixcalc, Rfast, flashClust, RANN, HiClimR, qlcMatrix, parallel, irlba, igraph, reshape2, stats, FNN
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Suggests: 
     testthat (>= 2.1.0),
     usethis
