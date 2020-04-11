@@ -139,5 +139,5 @@ runStepwiseReg <- function(ggc, filt.data) {
     }
 
     # Return
-    return(list("feature.genes" = neighbour_feature_genes, "elbow_point" = elbow_id))
+    return(list("feature.genes" = neighbour_feature_genes, "elbow.pt" = elbow_id))
 }

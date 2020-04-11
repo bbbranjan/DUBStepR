@@ -26,10 +26,10 @@ DUBStepR <- function(input.data, min.cells = 100, optimise.features = F, k = 10,
         # Obtain optimal feature set
         density.out <- getOptimalFeatureSet(filt.data = filt.data, ordered.genes = swreg.out$feature.genes, elbow.pt = swreg.out$elbow.pt)
 
-        dubStepR.out <- list("corr.info" = corr.info, "optimal.feature.genes" = density.out$optimal.feature.genes, "density.index" = density.out$density.index)
+        dubStepR.out <- list("corr.info" = corr.info, "elbow.pt" = swreg.out$elbow.pt, "optimal.feature.genes" = density.out$optimal.feature.genes, "density.index" = density.out$density.index)
     } else {
         # Return all correlated genes
-        dubStepR.out <- list("corr.info" = corr.info)
+        dubStepR.out <- list("corr.info" = corr.info, "elbow.pt" = swreg.out$elbow.pt)
     }
 
 
