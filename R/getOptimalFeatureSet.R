@@ -4,7 +4,7 @@
 #' @param elbow.pt Elbow point to start determining optimal feature set
 #' @param k number of nearest neighbours for CI computation
 #' @param num.pcs number of principal components to represent sc data. Default is 15.
-#' @param error Acceptable error margin for kNN computation. Default is 0.
+#' @param error Acceptable error margin for kNN computation. Default is 0, but is set to 1 for large datasets.
 #' @return optimal set of feature genes
 #'
 #' @export
@@ -28,17 +28,19 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
         # Run PCA on the feature data
         log.feature.data <-
             filt.data[neighbour_feature_genes, ]
-        pca.obj <-
-            irlba::prcomp_irlba(
-                x = Matrix::t(log.feature.data),
-                n = min(num.pcs, (length(
-                    neighbour_feature_genes
-                ) - 1)),
-                center = TRUE,
-                scale. = FALSE
-            )
 
-        pca.data <- pca.obj$x
+        temp.seurat <- Seurat::CreateSeuratObject(counts = log.feature.data)
+        Seurat::VariableFeatures(temp.seurat) <- neighbour_feature_genes
+        temp.seurat <-
+            Seurat::ScaleData(object = temp.seurat,
+                      features = neighbour_feature_genes,
+                      verbose = F)
+        temp.seurat <-
+            Seurat::RunPCA(object = temp.seurat,
+                   features = features,
+                   verbose = F)
+
+        pca.data <- as.matrix(temp.seurat@reductions$pca@cell.embeddings[, 1:num.pcs])
         rownames(pca.data) <- colnames(log.feature.data)
 
         # Compute k-NN distance
@@ -59,7 +61,7 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
         nn.dists <- nn.dists[,-1]
 
         # Calculate length scale to normalise distances
-        sdVec <- pca.obj$sdev
+        sdVec <- temp.seurat@reductions$pca@stdev[1:num.pcs]
         length_scale <- sqrt(sum(sdVec ^ 2))
 
         # Scale k-NN distances by length scale
