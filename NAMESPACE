@@ -2,6 +2,7 @@
 
 export(DUBStepR)
 export(findElbow)
+export(getCorrelationRange)
 export(getGGC)
 export(getOptimalFeatureSet)
 export(getfilteredData)
