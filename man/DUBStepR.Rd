@@ -6,8 +6,8 @@
 \usage{
 DUBStepR(
   input.data,
-  min.cells = 100,
-  optimise.features = F,
+  min.cells = 0.05 * ncol(input.data),
+  optimise.features = T,
   k = 10,
   num.pcs = 15,
   error = 0
@@ -18,13 +18,13 @@ DUBStepR(
 
 \item{min.cells}{minimum number of cells to filter genes out and smooth data over}
 
-\item{optimise.features}{Determine optimal feature set using density index. (Time-consuming step).}
+\item{optimise.features}{Determine optimal feature set using density index.}
 
 \item{k}{number of nearest neighbours. Default is 10.}
 
 \item{num.pcs}{number of principal components to represent sc data. Default is 15.}
 
-\item{error}{Acceptable error margin for kNN computation. Default is 0.}
+\item{error}{Acceptable error margin for kNN computation. Default is 0, but is set to 1 for large datasets.}
 }
 \value{
 Returns optimal feature set

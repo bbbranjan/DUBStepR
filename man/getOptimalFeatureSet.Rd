@@ -24,7 +24,7 @@ getOptimalFeatureSet(
 
 \item{num.pcs}{number of principal components to represent sc data. Default is 15.}
 
-\item{error}{Acceptable error margin for kNN computation. Default is 0.}
+\item{error}{Acceptable error margin for kNN computation. Default is 0, but is set to 1 for large datasets.}
 }
 \value{
 optimal set of feature genes
