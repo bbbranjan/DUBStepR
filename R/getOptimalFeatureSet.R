@@ -40,7 +40,7 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
                    features = features,
                    verbose = F)
 
-        pca.data <- as.matrix(temp.seurat@reductions$pca@cell.embeddings[, 1:min(20, (length(neighbour_feature_genes) - 1))])
+        pca.data <- as.matrix(temp.seurat@reductions$pca@cell.embeddings[, 1:min(20, ncol(temp.seurat@reductions$pca@cell.embeddings))])
         rownames(pca.data) <- colnames(log.feature.data)
 
         # Compute k-NN distance
