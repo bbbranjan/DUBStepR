@@ -18,10 +18,10 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
 
     # Progress bar
     print("Determining optimal feature set")
-    pb <- txtProgressBar(min = elbow.pt, max = length(ordered.genes), style = 3)
+    pb <- txtProgressBar(min = 50, max = length(ordered.genes), style = 3)
 
     # For each neighbour
-    for(num_genes in seq(from = elbow.pt, to = length(ordered.genes), by = 25)) {
+    for(num_genes in seq(from = 50, to = length(ordered.genes), by = 25)) {
         # Initialise number of genes
         neighbour_feature_genes <- ordered.genes[1:num_genes]
 
@@ -37,7 +37,7 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
                       verbose = F)
         temp.seurat <-
             Seurat::RunPCA(object = temp.seurat,
-                   features = features,
+                   features = neighbour_feature_genes,
                    verbose = F)
 
         pca.data <- as.matrix(temp.seurat@reductions$pca@cell.embeddings[, 1:min(20, ncol(temp.seurat@reductions$pca@cell.embeddings))])
