@@ -9,7 +9,7 @@ DUBStepR(
   min.cells = 0.05 * ncol(input.data),
   optimise.features = T,
   k = 10,
-  num.pcs = 15,
+  num.pcs = 20,
   error = 0
 )
 }
@@ -22,7 +22,7 @@ DUBStepR(
 
 \item{k}{number of nearest neighbours. Default is 10.}
 
-\item{num.pcs}{number of principal components to represent sc data. Default is 15.}
+\item{num.pcs}{number of principal components to represent sc data. Default is 20.}
 
 \item{error}{Acceptable error margin for kNN computation. Default is 0, but is set to 1 for large datasets.}
 }

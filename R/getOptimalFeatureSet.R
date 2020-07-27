@@ -3,13 +3,13 @@
 #' @param ordered.genes genes ordered after stepwise regression
 #' @param elbow.pt Elbow point to start determining optimal feature set
 #' @param k number of nearest neighbours for CI computation
-#' @param num.pcs number of principal components to represent sc data. Default is 15.
+#' @param num.pcs number of principal components to represent sc data. Default is 20.
 #' @param error Acceptable error margin for kNN computation. Default is 0, but is set to 1 for large datasets.
 #' @return optimal set of feature genes
 #'
 #' @export
 #'
-getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10, num.pcs = 15, error = 0) {
+getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10, num.pcs = 20, error = 0) {
 
     # Initialise variables
     mean_knn_vec <- c()
@@ -40,7 +40,7 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
                    features = neighbour_feature_genes,
                    verbose = F)
 
-        pca.data <- as.matrix(temp.seurat@reductions$pca@cell.embeddings[, 1:min(20, ncol(temp.seurat@reductions$pca@cell.embeddings))])
+        pca.data <- as.matrix(temp.seurat@reductions$pca@cell.embeddings[, 1:min(num.pcs, ncol(temp.seurat@reductions$pca@cell.embeddings))])
         rownames(pca.data) <- colnames(log.feature.data)
 
         # Compute k-NN distance
