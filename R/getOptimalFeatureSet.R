@@ -61,7 +61,7 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
         nn.dists <- nn.dists[,-1]
 
         # Calculate length scale to normalise distances
-        sdVec <- temp.seurat@reductions$pca@stdev[1:num.pcs]
+        sdVec <- na.omit(temp.seurat@reductions$pca@stdev[1:num.pcs])
         length_scale <- sqrt(sum(sdVec ^ 2))
 
         # Scale k-NN distances by length scale
