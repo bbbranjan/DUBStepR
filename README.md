@@ -1,7 +1,13 @@
 # DUBStepR
 DUBStepR (Determining the Underlying Basis using Step-wise Regression) is a feature selection algorithm for cell type identification in single-cell RNA-sequencing data.
 
+Feature selection, i.e. determining the optimal subset of genes to cluster cells into cell types, is a critical step in the unsupervised clustering of scRNA-seq data.
+
 ![](images/Overview_cartoon.png "Overview")
+
+DUBStepR is based on the intuition that cell-type-specific marker genes tend to be well correlated with each other, i.e. they typically have strong positive and negative correlations with other marker genes. After filtering genes based on a correlation range score, DUBStepR exploits structure in the gene-gene correlation matrix to prioritize genes as features for clustering.
+
+![](images/Methodology.png "Methodology")
 
 ## Release Notes
 Version 1.0 released on 10 December 2019.
@@ -14,7 +20,7 @@ DUBStepR requires your R version to be >= 3.5.0. Once you've ensured that, you c
 
 ```R
 install.packages("devtools")
-devtools::install_github("bbbranjan/DUBStepR")
+devtools::install_github("prabhakarlab/DUBStepR")
 ```
 
 ### Loading DUBStepR into your environment
