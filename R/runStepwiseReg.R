@@ -20,7 +20,7 @@ runStepwiseReg <- function(ggc, filt.data) {
 
     # Progress bar
     print("Running Stepwise Regression")
-    pb <- txtProgressBar(style = 3)
+    pb <- utils::txtProgressBar(style = 3)
 
     # For each step in the stepwise regression process
     for(i in step_seq) {
@@ -28,7 +28,7 @@ runStepwiseReg <- function(ggc, filt.data) {
         system.time({
 
             # Set progress bar
-            setTxtProgressBar(pb = pb, value = i / num_steps)
+            utils::setTxtProgressBar(pb = pb, value = i / num_steps)
 
             # Compute GGC'*GGC
             ggc_ggc <- Matrix::t(ggc_centered) %*% ggc_centered
@@ -101,13 +101,13 @@ runStepwiseReg <- function(ggc, filt.data) {
     # Progress bar
     print("\n")
     print("Adding correlated features")
-    pb <- txtProgressBar(min = 1, max = (nrow(ggc) - length(neighbour_feature_genes)), style = 3)
+    pb <- utils::txtProgressBar(min = 1, max = (nrow(ggc) - length(neighbour_feature_genes)), style = 3)
 
     # Adding neighbours of each gene
     for (i in 1:(nrow(ggc) - length(neighbour_feature_genes))) {
 
         # Set progress bar
-        setTxtProgressBar(pb = pb, value = i)
+        utils::setTxtProgressBar(pb = pb, value = i)
 
         # Select potential candidates for next neighbour
         candidateGGCNames <-

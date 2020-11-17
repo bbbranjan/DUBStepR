@@ -18,7 +18,7 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
 
     # Progress bar
     print("Determining optimal feature set")
-    pb <- txtProgressBar(min = elbow.pt, max = length(ordered.genes), style = 3)
+    pb <- utils::txtProgressBar(min = elbow.pt, max = length(ordered.genes), style = 3)
 
     # For each neighbour
     for(num_genes in seq(from = elbow.pt, to = length(ordered.genes), by = 25)) {
@@ -61,7 +61,7 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
         nn.dists <- nn.dists[,-1]
 
         # Calculate length scale to normalise distances
-        sdVec <- na.omit(temp.seurat@reductions$pca@stdev[1:num.pcs])
+        sdVec <- stats::na.omit(temp.seurat@reductions$pca@stdev[1:num.pcs])
         length_scale <- sqrt(sum(sdVec ^ 2))
 
         # Scale k-NN distances by length scale
@@ -81,7 +81,7 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
         }
 
         # Set progress bar
-        setTxtProgressBar(pb = pb, value = num_genes)
+        utils::setTxtProgressBar(pb = pb, value = num_genes)
     }
 
     # Determine optimal feature set
