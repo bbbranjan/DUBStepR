@@ -73,20 +73,21 @@ seuratObj <- NormalizeData(object = seuratObj, normalization.method = "LogNormal
 DUBStepR can be inserted into the Seurat workflow at this stage, and we recommend that be done in the following manner:
 
 ```R
-dubstepR.out <- DUBStepR(input.data = seuratObj@assays$RNA@data, min.cells = 0.01*ncol(seuratObj), optimise.features = T, k = 10, num.pcs = 15, error = 0)
+dubstepR.out <- DUBStepR(input.data = seuratObj@assays$RNA@data, min.cells = 0.05*ncol(seuratObj), optimise.features = T, k = 10, num.pcs = 20, error = 0)
 seuratObj@assays$RNA@var.features <- dubstepR.out$optimal.feature.genes
 ```
 ```
 [1] "Expression Filtering - Done"
 [1] "Mitochondrial, Ribosomal and Pseudo Genes Filtering - Done"
-[1] "kNN Smoothing - Done"
----> Splitting data matrix: 9 splits of 11769x1204 size
----> Splitting data matrix: 1 split of 11769x1211 size
+[1] "Computing GGC.."
+[1] "done."
 [1] "Running Stepwise Regression"
-|=============================================================================================================================| 100%[1] "Determining optimal feature set"
-|=============================================================================================================================| 100%
+  |=======================================================================================================================================|100%
+[1] "Adding correlated features"
+  |=======================================================================================================================================|100%
+[1] "Determining optimal feature set"
+  |=============================================================================================================================| 100%
 ```
-
 
 ### Visualize and cluster cells
 
