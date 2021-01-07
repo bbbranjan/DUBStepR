@@ -36,7 +36,7 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
                       features = neighbour_feature_genes,
                       verbose = F)
         temp.seurat <-
-            Seurat::RunPCA(object = temp.seurat,
+            Seurat::RunPCA(object = temp.seurat, npcs = num.pcs,
                    features = neighbour_feature_genes,
                    verbose = F)
 
