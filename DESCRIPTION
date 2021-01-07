@@ -9,7 +9,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: Matrix, BiocManager, tibble, MASS, matrixcalc, Rfast, flashClust, RANN, HiClimR, qlcMatrix, parallel, irlba, igraph, reshape2, stats, FNN, Seurat
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: 
     testthat (>= 2.1.0),
     usethis
