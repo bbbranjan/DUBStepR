@@ -20,7 +20,7 @@ getGGC <- function(data) {
     correlation_matrix <- qlcMatrix::corSparse(X = t_data, Y = NULL)
     dimnames(correlation_matrix) <- list(rownames(data), rownames(data))
     
-    message("Done ✓")
+    message("Done.")
     
     # Obtain correlation range
     rangeObj <- getCorrelationRange(correlation_matrix = correlation_matrix)

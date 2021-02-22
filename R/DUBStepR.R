@@ -10,16 +10,16 @@
 #'
 #' @export
 #'
-DUBStepRK <- function(input.data, min.cells = 0.05*ncol(input.data), optimise.features = T, k = 10, num.pcs = 20, error = 0) {
+DUBStepR <- function(input.data, min.cells = 0.05*ncol(input.data), optimise.features = T, k = 10, num.pcs = 20, error = 0) {
         
         # Filter genes
-        filt.data <- getFilteredDataK(data = input.data, min.cells = min.cells)
+        filt.data <- getFilteredData(data = input.data, min.cells = min.cells)
         
         # Compute gene-gene correlation matrix
-        ggc.out <- getGGCK(data = filt.data)
+        ggc.out <- getGGC(data = filt.data)
         
         # Run stepwise regression
-        swreg.out <- runStepwiseRegK(ggc = ggc.out$ggc, filt.data = filt.data)
+        swreg.out <- runStepwiseReg(ggc = ggc.out$ggc, filt.data = filt.data)
         message(paste0("Elbow Point: ", swreg.out$elbow.pt))
         corr.info <- data.frame(feature.genes = swreg.out$feature.genes, corr.range = ggc.out$corr.range[swreg.out$feature.genes])
         
@@ -30,7 +30,7 @@ DUBStepRK <- function(input.data, min.cells = 0.05*ncol(input.data), optimise.fe
             }
             
             # Obtain optimal feature set
-            density.out <- getOptimalFeatureSetK(filt.data = filt.data, ordered.genes = swreg.out$feature.genes, elbow.pt = swreg.out$elbow.pt, k = k, num.pcs = num.pcs, error = error)
+            density.out <- getOptimalFeatureSet(filt.data = filt.data, ordered.genes = swreg.out$feature.genes, elbow.pt = swreg.out$elbow.pt, k = k, num.pcs = num.pcs, error = error)
             
             dubStepR.out <- list("corr.info" = corr.info, "elbow.pt" = swreg.out$elbow.pt, "optimal.feature.genes" = density.out$optimal.feature.genes, "density.index" = density.out$density.index)
         } else {

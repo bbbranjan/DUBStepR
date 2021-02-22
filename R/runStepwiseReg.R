@@ -31,7 +31,7 @@ runStepwiseReg <- function(ggc, filt.data) {
             
             # Compute GGC'*GGC
             #Crossprod saves time, but only at this step
-            ggc_ggc <- crossprod(ggc_centered, ggc_centered)
+            ggc_ggc <- Matrix::crossprod(x = ggc_centered, y = ggc_centered)
             dimnames(ggc_ggc) <- dimnames(ggc_centered)
             
             # Compute variance explained
@@ -72,13 +72,13 @@ runStepwiseReg <- function(ggc, filt.data) {
         
     }
     message(" ")
-    message("Done ✓")
+    message("Done.")
     
     # Plot scree plot to see change in Frobenius norm over genes
     scree_values <- scree_values[which(scree_values != 0)]
     
     # Find elbow point
-    elbow_id <- findElbowK(y = log(scree_values)[1:100], ylab = "Log Variance Explained", plot = F)
+    elbow_id <- findElbow(y = log(scree_values)[1:100], ylab = "Log Variance Explained", plot = F)
     
     # Initialise variables to add neighbours
     elbow_feature_genes <- feature_genes[1:elbow_id]
@@ -101,7 +101,7 @@ runStepwiseReg <- function(ggc, filt.data) {
     
     # Select potential candidates for next neighbour, changed to mclapply for faster computing
     candidateGGCList <-
-        mclapply(ggc_list[neighbour_feature_genes], function(x) {
+        parallel::mclapply(ggc_list[neighbour_feature_genes], function(x) {
             x[which.max(x)]
         })
     
@@ -146,7 +146,7 @@ runStepwiseReg <- function(ggc, filt.data) {
             })
     }
     message(" ")
-    message("Done ✓")
+    message("Done.")
     
     # Return
     return(list("feature.genes" = neighbour_feature_genes, "elbow.pt" = elbow_id))

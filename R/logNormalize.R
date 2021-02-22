@@ -21,7 +21,7 @@ logNormalize <- function(raw.data, scale.factor = 10000) {
     # Log-transform normalized data
     log.norm.data <- log(1+norm.data)
     
-    message("Log-normalization ✓")
+    message("Log-normalization Done.")
     
     # Return
     return(log.norm.data)
