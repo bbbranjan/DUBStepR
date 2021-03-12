@@ -23,6 +23,8 @@ install.packages("devtools")
 devtools::install_github("prabhakarlab/DUBStepR")
 ```
 
+The installation should take ~ 30 seconds, not including dependencies.
+
 ### Loading DUBStepR into your environment
 
 After installation, load DUBStepR using the following command:
@@ -88,6 +90,8 @@ seuratObj@assays$RNA@var.features <- dubstepR.out$optimal.feature.genes
 [1] "Determining optimal feature set"
   |=============================================================================================================================| 100%
 ```
+
+This step could take upto 12 minutes on a normal desktop computer.
 
 ### Visualize and cluster cells
 
