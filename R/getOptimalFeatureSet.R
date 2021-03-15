@@ -41,7 +41,7 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
             temp.seurat <-
             Seurat::RunPCA(object = temp.seurat,
                            features = neighbour_feature_genes,
-                           verbose = F)}, classes = "warning")
+                           verbose = F)})
         
         
         pca.data <- as.matrix(temp.seurat@reductions$pca@cell.embeddings[, 1:min(num.pcs, ncol(temp.seurat@reductions$pca@cell.embeddings))])
