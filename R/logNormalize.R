@@ -2,7 +2,6 @@
 #' @param raw.data raw gene expression matrix
 #' @param scale.factor scaling factor for normalization
 #' @return log-normalized gene expression matrix
-#' @export
 #'
 logNormalize <- function(raw.data, scale.factor = 10000) {
 

@@ -2,7 +2,6 @@
 #' @param data log-transformed gene-expression matrix
 #' @return list of genes with their z-transformed correlation range values
 #'
-#' @export
 #'
 getGGC <- function(data) {
     message(" ")
@@ -51,5 +50,5 @@ getGGC <- function(data) {
     ggc <- correlation_matrix[topGenes, topGenes]
     
     # Return as matrix
-    return(list("corr.range" = zRange, "ggc" = as(ggc, "dgCMatrix")))
+    return(list("corr.range" = zRange, "ggc" = methods::as(ggc, "dgCMatrix")))
 }

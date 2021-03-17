@@ -7,7 +7,6 @@
 #' @param error Acceptable error margin for kNN computation. Default is 0, but is set to 1 for large datasets.
 #' @return optimal set of feature genes
 #'
-#' @export
 #'
 getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10, num.pcs = 20, error = 0) {
 
@@ -37,11 +36,11 @@ getOptimalFeatureSet <- function(filt.data, ordered.genes, elbow.pt = 25, k = 10
             temp.seurat <-
             Seurat::ScaleData(object = temp.seurat,
                               features = neighbour_feature_genes,
-                              verbose = F)
+                              verbose = FALSE)
             temp.seurat <-
             Seurat::RunPCA(object = temp.seurat,
                            features = neighbour_feature_genes,
-                           verbose = F)})
+                           verbose = FALSE)}, classes = "warning")
         
         
         pca.data <- as.matrix(temp.seurat@reductions$pca@cell.embeddings[, 1:min(num.pcs, ncol(temp.seurat@reductions$pca@cell.embeddings))])

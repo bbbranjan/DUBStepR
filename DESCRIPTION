@@ -1,17 +1,14 @@
 Package: DUBStepR
 Type: Package
-Title: DUBStepR
-Version: 1.0
-Author: Bobby Ranjan
+Title: Correlation-Based Feature Selection for Single-Cell RNA Sequencing Data
+Version: 1.1
+Authors@R: c(person("Bobby", "Ranjan", email = "ranjan_bobby@gis.a-star.edu.sg", role = c("aut", "cre")), person("Kunal", "Mishra", email = "kunal006@e.ntu.edu.sg", role = "ctb"), person("Bryan", "Hanson", email = "hanson@depauw.edu", role = "ctb"), person("Damian", "Coventry", email = "", role = "ctb"), person("Brandon", "Crosby", email = "", role = "ctb"), person("Gregoire", "Thomas", email = "", role = "ctb"))
 Maintainer: Bobby Ranjan <ranjan_bobby@gis.a-star.edu.sg>
-Description: DUBStepR determines the optimal set of feature genes to characterise cell types in scRNA-seq data using stepwise regression on gene-gene correlations.
+Description: Determining the optimal set of feature genes to characterise cell types in single-cell RNA sequencing data using stepwise regression on gene-gene correlations. <doi:10.1101/2020.10.07.330563>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: Matrix, BiocManager, tibble, MASS, matrixcalc, Rfast, flashClust, RANN, HiClimR, qlcMatrix, parallel, irlba, igraph, reshape2, stats, FNN, Seurat
+Imports: Matrix, BiocManager, tibble, MASS, matrixcalc, Rfast, flashClust, RANN, HiClimR, qlcMatrix, parallel, irlba, igraph, reshape2, stats, FNN, Seurat, methods, graphics
 RoxygenNote: 7.1.1
-Suggests: 
-    testthat (>= 2.1.0),
-    usethis
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)

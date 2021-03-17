@@ -3,16 +3,16 @@
 #' @param filt.data filtered and normalised log-transformed genes x cells single-cell RNA-seq data matrix
 #' @return optimal feature set
 #'
-#' @export
 #'
 runStepwiseReg <- function(ggc, filt.data) {
 
     # Initialize variables
     ggc.cols <- ncol(ggc)
     ggc.rows <- nrow(ggc)
-    ggc_centered <- ggc - Matrix::Matrix(data = Matrix::colMeans(ggc), ncol = ggc.cols, nrow = ggc.rows, byrow = T)
+    ggc_centered <- ggc - Matrix::Matrix(data = Matrix::colMeans(ggc), ncol = ggc.cols, nrow = ggc.rows, byrow = TRUE)
     step = 1
     num_steps = 100
+    num_regressions = 30
     step_seq = seq(from = step, to = num_steps, by = step)
     scree_values <- c(matrixcalc::frobenius.norm(x = as.matrix(ggc_centered)))
     names(scree_values) <- c("0")
@@ -25,9 +25,9 @@ runStepwiseReg <- function(ggc, filt.data) {
     
     # For each step in the stepwise regression process
     for(i in step_seq) {
-        if(i < 30){
+        if(i < num_regressions){
             # Set progress bar
-            utils::setTxtProgressBar(pb = pb, value = i / num_steps)
+            utils::setTxtProgressBar(pb = pb, value = i / num_regressions)
             
             # Compute GGC'*GGC
             #Crossprod saves time, but only at this step
@@ -45,7 +45,7 @@ runStepwiseReg <- function(ggc, filt.data) {
             # Select gene to regress out
             varExpVec <- gcNormVec / gNormVec
             regressed.genes <-
-                names(sort(varExpVec, decreasing = T))[1:step]
+                names(sort(varExpVec, decreasing = TRUE))[1:step]
             
             # Add regressed gene to feature set
             feature_genes <- union(feature_genes, regressed.genes)
@@ -64,9 +64,8 @@ runStepwiseReg <- function(ggc, filt.data) {
             ggc_centered = eps
 
         } else {
-            utils::setTxtProgressBar(pb = pb, value = i / num_steps)
-            scree_values[paste0(i)] <- scree_values[30]
-            
+            utils::setTxtProgressBar(pb = pb, value = i / num_regressions)
+            scree_values[paste0(i)] <- scree_values[num_regressions]
             
         }
         
@@ -78,7 +77,7 @@ runStepwiseReg <- function(ggc, filt.data) {
     scree_values <- scree_values[which(scree_values != 0)]
     
     # Find elbow point
-    elbow_id <- findElbow(y = log(scree_values)[1:100], ylab = "Log Variance Explained", plot = F)
+    elbow_id <- findElbow(y = log(scree_values)[1:num_steps], ylab = "Log Variance Explained", plot = FALSE)
     
     # Initialise variables to add neighbours
     elbow_feature_genes <- feature_genes[1:elbow_id]
@@ -122,7 +121,7 @@ runStepwiseReg <- function(ggc, filt.data) {
             unlist(lapply(candidateGGCList, names))
         
         candidateGGCVec <-
-            unlist(candidateGGCList, use.names = F)
+            unlist(candidateGGCList, use.names = FALSE)
         names(candidateGGCVec) <- candidateGGCNames
         
         # Select candidate with largest correlation to feature set

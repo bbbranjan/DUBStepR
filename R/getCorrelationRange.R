@@ -2,12 +2,11 @@
 #' @param correlation_matrix gene-gene correlation matrix
 #' @return list of p-values, adjusted p-values and correlation ranges for each gene
 #'
-#' @export
 #'
 getCorrelationRange <- function(correlation_matrix) {
 
     # Sort each column of the correlation matrix
-    sorted_corr = apply(correlation_matrix, 2, sort, decreasing = T)
+    sorted_corr = apply(correlation_matrix, 2, sort, decreasing = TRUE)
 
     # Select the second largest correlation for each gene
     max_corr = sorted_corr[3, ]

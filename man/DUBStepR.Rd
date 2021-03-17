@@ -7,7 +7,7 @@
 DUBStepR(
   input.data,
   min.cells = 0.05 * ncol(input.data),
-  optimise.features = T,
+  optimise.features = TRUE,
   k = 10,
   num.pcs = 20,
   error = 0
@@ -31,6 +31,10 @@ Returns optimal feature set
 }
 \description{
 DUBStepR - Obtain a list of feature genes to characterise cell types
+}
+\examples{
+res <- DUBStepR(input.data = pbmc_norm_small_data)
+
 }
 \author{
 ranjanb
