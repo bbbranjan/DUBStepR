@@ -1,4 +1,8 @@
 # DUBStepR
+
+[![CRAN Version](https://www.r-pkg.org/badges/version/DUBStepR)](https://cran.r-project.org/package=DUBStepR)
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/DUBStepR)](https://cran.r-project.org/package=DUBStepR)
+
 DUBStepR (Determining the Underlying Basis using Step-wise Regression) is a feature selection algorithm for cell type identification in single-cell RNA-sequencing data.
 
 Feature selection, i.e. determining the optimal subset of genes to cluster cells into cell types, is a critical step in the unsupervised clustering of scRNA-seq data.
