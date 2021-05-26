@@ -34,11 +34,7 @@ orthogonal distance from that line.
 }
 \section{Warning}{
 
-This function makes some simple checks that the data is concave
-as defined above.  Even so, it may give
-answers in some cases that are not valid.  Please check
-on typical data that you encounter to verify that it works
-in your cases.
+This function makes some simple checks that the data is concave as defined above.  Even so, it may give  answers in some cases that are not valid.  Please check on typical data that you encounter to verify that it works in your cases.
 }
 
 \references{

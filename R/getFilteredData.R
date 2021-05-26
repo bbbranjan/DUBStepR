@@ -3,24 +3,24 @@
 #' @param min.cells gene expression matrix
 #' @return filtered gene-expression matrix
 #'
-#' @export
 #'
-getfilteredData <- function(data, min.cells = 0.05*ncol(data)) {
-
+getFilteredData <- function(data, min.cells = 0.05*ncol(data)) {
+    message(" ")
+    message("Running DUBStepR...")
+    
     # Filter data by gene expression
-    filt.data <- data[Matrix::rowSums(data) > min.cells, ]
-
-
-    print("Expression Filtering - Done")
-
+    filt.data <- data[Matrix::rowSums(data > 0) > min.cells, ]
+    
+    message(" ")
+    message("Expression Filtering Done.")
+    
     # Remove mitochondrial, spike-in and ribosomal genes as they do not assist in cell type separation
     filt.data <- filt.data[!grepl(pattern = "^MT-|^ERCC-|^RPS|^RPL", x = rownames(filt.data)), ]
-
+    
     # Remove pseudogenes
-    data(pseudo_genes, envir=environment())
     filt.data <- filt.data[!(rownames(filt.data) %in% pseudo_genes),]
-
-    print("Mitochondrial, Ribosomal and Pseudo Genes Filtering - Done")
-
+    
+    message("Mitochondrial, Ribosomal and Pseudo Genes Filtering Done.")
+    
     return(filt.data)
 }

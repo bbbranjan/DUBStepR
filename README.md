@@ -1,8 +1,18 @@
 # DUBStepR
+
+[![CRAN Version](https://www.r-pkg.org/badges/version/DUBStepR)](https://cran.r-project.org/package=DUBStepR)
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/DUBStepR)](https://cran.r-project.org/package=DUBStepR)
+
 DUBStepR (Determining the Underlying Basis using Step-wise Regression) is a feature selection algorithm for cell type identification in single-cell RNA-sequencing data.
 Please refer to https://github.com/prabhakarlab/DUBStepR for the latest version of DUBStepR.
 
+Feature selection, i.e. determining the optimal subset of genes to cluster cells into cell types, is a critical step in the unsupervised clustering of scRNA-seq data.
+
 ![](images/Overview_cartoon.png "Overview")
+
+DUBStepR is based on the intuition that cell-type-specific marker genes tend to be well correlated with each other, i.e. they typically have strong positive and negative correlations with other marker genes. After filtering genes based on a correlation range score, DUBStepR exploits structure in the gene-gene correlation matrix to prioritize genes as features for clustering.
+
+![](images/Methodology.png "Methodology")
 
 ## Release Notes
 Version 1.0 released on 10 December 2019.
@@ -15,8 +25,10 @@ DUBStepR requires your R version to be >= 3.5.0. Once you've ensured that, you c
 
 ```R
 install.packages("devtools")
-devtools::install_github("bbbranjan/DUBStepR")
+devtools::install_github("prabhakarlab/DUBStepR")
 ```
+
+The installation should take ~ 30 seconds, not including dependencies.
 
 ### Loading DUBStepR into your environment
 
@@ -68,20 +80,23 @@ seuratObj <- NormalizeData(object = seuratObj, normalization.method = "LogNormal
 DUBStepR can be inserted into the Seurat workflow at this stage, and we recommend that be done in the following manner:
 
 ```R
-dubstepR.out <- DUBStepR(input.data = seuratObj@assays$RNA@data, min.cells = 0.01*ncol(seuratObj), optimise.features = T, k = 10, num.pcs = 15, error = 0)
+dubstepR.out <- DUBStepR(input.data = seuratObj@assays$RNA@data, min.cells = 0.05*ncol(seuratObj), optimise.features = T, k = 10, num.pcs = 20, error = 0)
 seuratObj@assays$RNA@var.features <- dubstepR.out$optimal.feature.genes
 ```
 ```
 [1] "Expression Filtering - Done"
 [1] "Mitochondrial, Ribosomal and Pseudo Genes Filtering - Done"
-[1] "kNN Smoothing - Done"
----> Splitting data matrix: 9 splits of 11769x1204 size
----> Splitting data matrix: 1 split of 11769x1211 size
+[1] "Computing GGC.."
+[1] "done."
 [1] "Running Stepwise Regression"
-|=============================================================================================================================| 100%[1] "Determining optimal feature set"
-|=============================================================================================================================| 100%
+  |=======================================================================================================================================|100%
+[1] "Adding correlated features"
+  |=======================================================================================================================================|100%
+[1] "Determining optimal feature set"
+  |=============================================================================================================================| 100%
 ```
 
+This step could take upto 12 minutes on a normal desktop computer.
 
 ### Visualize and cluster cells
 

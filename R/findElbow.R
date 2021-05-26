@@ -36,13 +36,8 @@
 #' @importFrom stats lm coef
 #'
 #' @section Warning:
-#' This function makes some simple checks that the data is concave
-#' as defined above.  Even so, it may give
-#' answers in some cases that are not valid.  Please check
-#' on typical data that you encounter to verify that it works
-#' in your cases.
+#' This function makes some simple checks that the data is concave as defined above.  Even so, it may give  answers in some cases that are not valid.  Please check on typical data that you encounter to verify that it works in your cases.
 #'
-#' @export
 #'
 
 findElbow <- function(y, ylab = "y values", plot = FALSE, returnIndex = TRUE) {
@@ -97,7 +92,7 @@ findElbow <- function(y, ylab = "y values", plot = FALSE, returnIndex = TRUE) {
         }
         u <- (((px - x1) * (x2 - x1)) + ((py - y1) * (y2 - y1)))
         u <- u / (lineMag * lineMag)
-        if(any((u < 0.00001) || (u > 1))) { # BAH added any to vectorize
+        if(any(u < 0.00001) || any(u > 1)) { # BAH added any to vectorize
             ## closest point does not fall within the line segment, take the shorter distance
             ## to an endpoint
             ix <- lineMagnitude(px, py, x1, y1)
@@ -153,10 +148,10 @@ findElbow <- function(y, ylab = "y values", plot = FALSE, returnIndex = TRUE) {
         edm <- which.max(DF$dist)
         plot(DF[,1:2], type = "b", xlab = "No. of steps", ylab = ylab,
              main = "Looking for the Elbow")
-        segments(DF$x[1], DF$y[1],
+        graphics::segments(DF$x[1], DF$y[1],
                  DF$x[nrow(DF)], DF$y[nrow(DF)], col = "red")
-        points(DF$x[edm], DF$y[edm], cex = 1.5, col = "red")
-        points(DF$x[edm], DF$y[edm], pch = 20)
+        graphics::points(DF$x[edm], DF$y[edm], cex = 1.5, col = "red")
+        graphics::points(DF$x[edm], DF$y[edm], pch = 20)
     }
 
     if (returnIndex) return(which.max(DF$dist))
